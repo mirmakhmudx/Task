@@ -9,12 +9,13 @@ use Illuminate\Database\Eloquent\Attributes\Hidden;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
-const STATUS_WAIT = 'wait';
-const STATUS_ACTIVE = 'active';
 #[Fillable(['name', 'email', 'password','status'])]
 #[Hidden(['password', 'remember_token'])]
 class User extends Authenticatable
 {
+
+    const STATUS_WAIT = 'wait';
+    const STATUS_ACTIVE = 'active';
     use HasFactory, Notifiable;
 
     protected function casts(): array
