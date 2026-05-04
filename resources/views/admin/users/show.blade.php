@@ -22,10 +22,10 @@
             <th>Status</th>
             <td>
                 @if ($user->status === \App\Models\User::STATUS_WAIT)
-                    <span class="badge badge-secondary">Waiting</span>
+                    <span class="badge bg-secondary">Waiting</span>
                 @endif
                 @if ($user->status === \App\Models\User::STATUS_ACTIVE)
-                    <span class="badge badge-primary">Active</span>
+                    <span class="badge bg-primary">Active</span>
                 @endif
             </td>
         </tr>

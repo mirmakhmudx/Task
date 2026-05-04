@@ -27,6 +27,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [AdminHomeController::class, 'index'])->name('home');
         Route::resource('users', UserController::class);
     });
+
 });
 
 require __DIR__.'/auth.php';
