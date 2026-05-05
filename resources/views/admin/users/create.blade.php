@@ -16,7 +16,6 @@
                 <li class="breadcrumb-item active text-dark fw-medium">Yangi qo'shish</li>
             </ol>
         </nav>
-
         <div class="card">
             <div class="card-body">
 
