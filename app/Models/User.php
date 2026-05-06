@@ -14,8 +14,8 @@ use Illuminate\Notifications\Notifiable;
 class User extends Authenticatable
 {
 
-    const STATUS_WAIT = 'wait';
-    const STATUS_ACTIVE = 'active';
+    public const STATUS_WAIT = 'waiting';
+     public const STATUS_ACTIVE = 'active';
     use HasFactory, Notifiable;
 
     protected function casts(): array
@@ -25,4 +25,29 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+
+
+    public function verify(): void
+    {
+        if (!$this->isWait()) {
+            throw new \DomainException('Foydalanuvchi allaqachon tasdiqlangan.');
+        }
+
+        $this->status = self::STATUS_ACTIVE;
+        $this->verify_token = null;
+    }
+
+    public function isWait(): bool
+    {
+        return strtolower(trim($this->status)) === self::STATUS_WAIT;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
+
+
+
 }
