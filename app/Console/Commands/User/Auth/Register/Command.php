@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Commands\User\Auth\Register;
+namespace App\Console\Commands\User\Auth\Register;
 
 class Command
 {

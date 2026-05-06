@@ -13,7 +13,7 @@ class CommandBusServiceProvider extends ServiceProvider
         $this->app->singleton(CommandBus::class);
 
         CommandBus::register([
-            Register\Command::class => Register\Handler::class,
+            \App\Console\Commands\User\Auth\Register\Command::class => Register\Handler::class,
         ]);
     }
 }

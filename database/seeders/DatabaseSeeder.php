@@ -10,16 +10,6 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Admin
-        User::factory()->create([
-            'name'     => 'Admin',
-            'email'    => 'admin@app.com',
-            'password' => Hash::make('password'),
-            'status'   => 'active',
-        ]);
-
-        // Test userlar
-        User::factory()->count(10)->active()->create();
-        User::factory()->count(5)->waiting()->create();
+        $this->call(UserTableSeeder::class);
     }
 }

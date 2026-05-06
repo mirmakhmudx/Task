@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\CommandBus;
-use App\Commands\User\Auth\Register\Command;
+use App\Console\Commands\User\Auth\Register\Command;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Auth\RegisterRequest;
 use Illuminate\Http\RedirectResponse;
