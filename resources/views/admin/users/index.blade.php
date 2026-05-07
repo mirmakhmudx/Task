@@ -14,7 +14,7 @@
                 <option value="waiting" {{ request('status')==='waiting'?'selected':'' }}>Waiting</option>
             </select>
             <select name="role" class="form-select" style="max-width:140px;border-radius:10px;font-size:0.9rem;border-color:#e8eaf0;">
-                <option value="">Barcha rol</option>
+                <option value="">Barcha role</option>
                 @foreach(\App\Models\User::rolesList() as $value => $label)
                     <option value="{{ $value }}" {{ request('role')===$value?'selected':'' }}>{{ $label }}</option>
                 @endforeach
@@ -35,7 +35,7 @@
                         <th style="padding:12px 16px;font-weight:600;color:#6b7280;">Name</th>
                         <th style="padding:12px 16px;font-weight:600;color:#6b7280;">Email</th>
                         <th style="padding:12px 16px;font-weight:600;color:#6b7280;">Status</th>
-                        <th style="padding:12px 16px;font-weight:600;color:#6b7280;">Rol</th>
+                        <th style="padding:12px 16px;font-weight:600;color:#6b7280;">Role</th>
                         <th style="padding:12px 16px;width:100px;"></th>
                     </tr>
                 </thead>
