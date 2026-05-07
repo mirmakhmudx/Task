@@ -15,13 +15,12 @@
 
         <div class="card">
             <div class="card-body">
+                <h5 class="fw-semibold mb-4" style="color:#1a1a2e;">Tahrirlash</h5>
 
-                <h5 class="fw-semibold mb-4" style="color:#1a1a2e;">Foydalanuvchini tahrirlash</h5>
-
-                @if ($errors->any())
+                @if($errors->any())
                     <div class="mb-4 p-3" style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;">
                         <ul class="mb-0 ps-3" style="font-size:0.85rem;color:#dc2626;">
-                            @foreach ($errors->all() as $error)
+                            @foreach($errors->all() as $error)
                                 <li>{{ $error }}</li>
                             @endforeach
                         </ul>
@@ -32,53 +31,52 @@
                     @csrf
                     @method('PUT')
 
+                    {{-- Name --}}
                     <div class="mb-3">
-                        <label for="name" class="form-label fw-medium" style="font-size:0.875rem;color:#374151;">Ism</label>
-                        <input id="name" type="text" name="name" value="{{ old('name', $user->name) }}"
-                               required autofocus placeholder="Ism kiriting"
+                        <label class="form-label fw-medium" style="font-size:0.875rem;color:#374151;">Ism</label>
+                        <input type="text" name="name" value="{{ old('name', $user->name) }}"
                                class="form-control @error('name') is-invalid @enderror"
                                style="border-radius:10px;font-size:0.9rem;border-color:#e8eaf0;">
-                        @error('name')
-                            <div class="invalid-feedback" style="font-size:0.8rem;">{{ $message }}</div>
-                        @enderror
+                        @error('name') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
+                    {{-- Email --}}
                     <div class="mb-3">
-                        <label for="email" class="form-label fw-medium" style="font-size:0.875rem;color:#374151;">Email</label>
-                        <input id="email" type="email" name="email" value="{{ old('email', $user->email) }}"
-                               required placeholder="email@example.com"
+                        <label class="form-label fw-medium" style="font-size:0.875rem;color:#374151;">Email</label>
+                        <input type="email" name="email" value="{{ old('email', $user->email) }}"
                                class="form-control @error('email') is-invalid @enderror"
                                style="border-radius:10px;font-size:0.9rem;border-color:#e8eaf0;">
-                        @error('email')
-                            <div class="invalid-feedback" style="font-size:0.8rem;">{{ $message }}</div>
-                        @enderror
+                        @error('email') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
+                    {{-- Role --}}
                     <div class="mb-3">
-                        <label for="status" class="form-label fw-medium" style="font-size:0.875rem;color:#374151;">Status</label>
-                        <select id="status" name="status"
-                                class="form-select @error('status') is-invalid @enderror"
+                        <label class="form-label fw-medium" style="font-size:0.875rem;color:#374151;">Rol</label>
+                        <select name="role" class="form-select @error('role') is-invalid @enderror"
                                 style="border-radius:10px;font-size:0.9rem;border-color:#e8eaf0;">
-                            <option value="active" {{ old('status', $user->status) === 'active' ? 'selected' : '' }}>Active</option>
-                            <option value="waiting" {{ old('status', $user->status) === 'waiting' ? 'selected' : '' }}>Waiting</option>
+                            @foreach($roles as $value => $label)
+                                <option value="{{ $value }}"
+                                    {{ old('role', $user->role) === $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
                         </select>
-                        @error('status')
-                            <div class="invalid-feedback" style="font-size:0.8rem;">{{ $message }}</div>
-                        @enderror
+                        @error('role') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
+                    {{-- Status --}}
                     <div class="mb-4">
-                        <label for="password" class="form-label fw-medium" style="font-size:0.875rem;color:#374151;">
-                            Yangi parol
-                            <span style="color:#9ca3af;font-weight:400;">(ixtiyoriy)</span>
-                        </label>
-                        <input id="password" type="password" name="password"
-                               placeholder="Bo'sh qoldiring — o'zgarmaydi"
-                               class="form-control @error('password') is-invalid @enderror"
-                               style="border-radius:10px;font-size:0.9rem;border-color:#e8eaf0;">
-                        @error('password')
-                            <div class="invalid-feedback" style="font-size:0.8rem;">{{ $message }}</div>
-                        @enderror
+                        <label class="form-label fw-medium" style="font-size:0.875rem;color:#374151;">Status</label>
+                        <select name="status" class="form-select @error('status') is-invalid @enderror"
+                                style="border-radius:10px;font-size:0.9rem;border-color:#e8eaf0;">
+                            @foreach($statuses as $value => $label)
+                                <option value="{{ $value }}"
+                                    {{ old('status', $user->status) === $value ? 'selected' : '' }}>
+                                    {{ $label }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('status') <div class="invalid-feedback">{{ $message }}</div> @enderror
                     </div>
 
                     <div class="d-flex gap-2">
@@ -89,7 +87,6 @@
                 </form>
             </div>
         </div>
-
     </div>
 </div>
 @endsection

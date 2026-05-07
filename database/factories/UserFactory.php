@@ -4,8 +4,6 @@ namespace Database\Factories;
 
 use App\Models\User;
 use Illuminate\Database\Eloquent\Factories\Factory;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 
 class UserFactory extends Factory
 {
@@ -13,27 +11,36 @@ class UserFactory extends Factory
 
     public function definition(): array
     {
-        $active = fake()->boolean();        return [
+        return [
             'name'              => fake()->name(),
             'email'             => fake()->unique()->safeEmail(),
-            'password'          => Hash::make('password'),
-            'remember_token' => Str::random(10),
-            'verify_token' => $active ? null : Str::uuid(),
-            'status'            => fake()->randomElement(['active', 'waiting']),
+            'password'          => 'password',
+            'status'            => User::STATUS_ACTIVE,
+            'role'              => User::ROLE_USER,
+            'verify_token'      => null,
             'email_verified_at' => now(),
         ];
     }
 
-    public function active(): static
-    {
-        return $this->state(['status' => 'active']);
-    }
-
     public function waiting(): static
     {
-        return $this->state(['status' => 'waiting']);
+        return $this->state(['status' => User::STATUS_WAIT]);
     }
 
+    public function active(): static
+    {
+        return $this->state(['status' => User::STATUS_ACTIVE]);
+    }
+
+    public function admin(): static
+    {
+        return $this->state(['role' => User::ROLE_ADMIN]);
+    }
+
+    public function moderator(): static
+    {
+        return $this->state(['role' => User::ROLE_MODERATOR]);
+    }
     public function unverified(): static
     {
         return $this->state(['email_verified_at' => null]);

@@ -6,6 +6,10 @@ use App\Entity\User;
 use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Contracts\Events\Dispatcher;
 use Illuminate\Auth\Events\Registered;
+use App\Mail\Auth\VerifyMail;
+use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Mail;
 
 class RegisterService
 {
@@ -15,16 +19,18 @@ class RegisterService
     ) {}
 
 
-    public function handle(array $data): User
+    public function handle(array $data)
     {
-        $user = User::register(
-            $data['name'],
-            $data['email'],
-            $data['password']
-        );
+        $user = User::create([
+            'name' => $data['name'],
+            'email' => $data['email'],
+            'password' => Hash::make($data['password']),
+            'role'         => User::ROLE_USER,   // ← shu yo'q edi
+            'verify_token' => Str::random(40),
+            'status' => User::STATUS_WAIT,
+        ]);
 
-        $this->mailer->to($user->email)->send(new VerifyMail($user));
-        $this->dispatcher->dispatch(new Registered($user));
+        Mail::to($user->email)->send(new VerifyMail($user));
 
         return $user;
     }

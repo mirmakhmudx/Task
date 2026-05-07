@@ -5,8 +5,10 @@ use App\Http\Controllers\Admin\{HomeController as AdminHomeController, UsersCont
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Auth\VerifyController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
+Route::get('/verify/{token}', [VerifyController::class, 'verify'])->name('register.verify');
 
 Route::middleware(['auth', 'verified'])->group(function () {
 
