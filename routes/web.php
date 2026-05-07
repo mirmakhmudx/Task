@@ -22,10 +22,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [CabinetHomeController::class, 'index'])->name('index');
     });
 
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', [AdminHomeController::class, 'index'])->name('home');
-        Route::resource('users', UserController::class);
-    });
+    Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin-panel'])->group(function () {
+            Route::get('/', [AdminHomeController::class, 'index'])->name('home');
+            Route::resource('users', UserController::class);
+        });
 
 });
 

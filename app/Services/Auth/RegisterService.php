@@ -23,7 +23,7 @@ class RegisterService
             $data['password']
         );
 
-//         $this->mailer->to($user->email)->send(new VerifyMail($user));
+        $this->mailer->to($user->email)->send(new VerifyMail($user));
         $this->dispatcher->dispatch(new Registered($user));
 
         return $user;
@@ -35,6 +35,6 @@ class RegisterService
         $user = User::findOrFail($id);
         $user->verify();
         $user->save();
-        // $this->mailer->to($user->email)->send(new SuccessVerifiedMail($user));
+        $this->mailer->to($user->email)->send(new SuccessVerifiedMail($user));
     }
 }

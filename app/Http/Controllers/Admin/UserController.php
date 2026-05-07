@@ -7,18 +7,22 @@ use App\Http\Requests\UserRequest;
 use App\Http\Requests\UsersUpdateRequest;
 use App\Models\User;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class UserController extends Controller
 {
 
     public function index()
     {
+        $this->authorize('admin-panel');
+
         $users = User::orderBy('id', 'desc')->paginate(10);
         return view('admin.users.index', compact('users'));
     }
 
     public function create()
     {
+        $this->authorize('manage-users');
         return view('admin.users.create');
     }
 
