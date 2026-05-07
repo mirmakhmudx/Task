@@ -1,7 +1,7 @@
 <?php
 
 return [
-    App\Providers\AppServiceProvider::class,
-    App\Providers\AuthServiceProvider::class,
-    App\Providers\CommandBusServiceProvider::class,
+    \App\Providers\App\AppServiceProvider::class,
+    \App\Providers\Auth\AuthServiceProvider::class,
+    \App\Providers\CommandBus\CommandBusServiceProvider::class,
 ];

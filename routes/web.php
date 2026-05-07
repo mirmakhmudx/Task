@@ -1,11 +1,11 @@
 <?php
 
 use App\Http\Controllers\{Home\HomeController, Profile\ProfileController};
-use App\Http\Controllers\Admin\{HomeController as AdminHomeController, UsersController};
-use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\Region\RegionController;
+use App\Http\Controllers\Admin\User\UserController;
+use App\Http\Controllers\Auth\VerifyController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Auth\VerifyController;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/verify/{token}', [VerifyController::class, 'verify'])->name('register.verify');
@@ -24,10 +24,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [CabinetHomeController::class, 'index'])->name('index');
     });
 
-    Route::prefix('admin')->name('admin.')->middleware(['auth', 'can:admin-panel'])->group(function () {
-            Route::get('/', [AdminHomeController::class, 'index'])->name('home');
-            Route::resource('users', UserController::class);
-        });
+    Route::prefix('admin')->name('admin.')->middleware('can:admin-panel')->group(function () {
+        Route::resource('users', UserController::class);
+        Route::resource('regions', RegionController::class);
+    });
 
 });
 

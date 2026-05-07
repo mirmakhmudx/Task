@@ -1,10 +1,12 @@
 <?php
 
-namespace App\Console\Commands\User;
+namespace App\Console\Commands\User\Auth\Verify;
 
-use App\Entity\User;
-use App\Services\Auth\RegisterService; // Service namespace to'g'riligini tekshiring
+use App\Entity\User\User;
+use App\Services\Auth\RegisterService;
 use Illuminate\Console\Command;
+
+// Service namespace to'g'riligini tekshiring
 
 class VerifyCommand extends Command
 {

@@ -5,15 +5,16 @@
                href="{{ route('admin.home') }}">Dashboard</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.regions.*') ? 'active' : '' }}"
+               href="{{ route('admin.regions.index') }}">Regions</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
                href="{{ route('admin.users.index') }}">Users</a>
         </li>
     </ul>
 
-    {{-- Faqat users bo'limida ko'rinadi --}}
-    @if(request()->routeIs('admin.users.*'))
-        <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">
-            + Create
-        </a>
+    @if(request()->routeIs('admin.users.*') && !request()->routeIs('admin.users.create'))
+        <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">+ Create</a>
     @endif
 </div>

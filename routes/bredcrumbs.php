@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\Admin\HomeController as AdminHomeController;
 use App\Http\Controllers\Admin\UsersController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use App\Http\Controllers\Home\HomeController;
 use Diglactic\Breadcrumbs\Breadcrumbs;
 use Diglactic\Breadcrumbs\Generator as BreadcrumbTrail;
 use Illuminate\Support\Facades\Route;
+use page\HomeController as AdminHomeController;
 
 Breadcrumbs::register('home', function (BreadcrumbTrail $trail) {
     $trail->push('home');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Providers;
+namespace App\Providers\CommandBus;
 
 use App\CommandBus;
 use App\Commands\User\Auth\Register;

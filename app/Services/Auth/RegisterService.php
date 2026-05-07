@@ -2,14 +2,13 @@
 
 namespace App\Services\Auth;
 
-use App\Entity\User;
-use Illuminate\Contracts\Mail\Mailer;
-use Illuminate\Contracts\Events\Dispatcher;
-use Illuminate\Auth\Events\Registered;
+use App\Entity\User\User;
 use App\Mail\Auth\VerifyMail;
+use Illuminate\Contracts\Events\Dispatcher;
+use Illuminate\Contracts\Mail\Mailer;
 use Illuminate\Support\Facades\Hash;
-use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Str;
 
 class RegisterService
 {

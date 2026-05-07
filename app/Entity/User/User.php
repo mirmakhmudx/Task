@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Entity;
+namespace App\Entity\User;
 
 use App\Models\User as UserModel;
 
 class User extends UserModel
 {
-    // Biznes qoidalar shu yerda bo'ladi
-    // Model "faqat DB" — Entity "biznes mantiq"
+
 
     public function isActive(): bool
     {

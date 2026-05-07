@@ -1,7 +1,7 @@
 <?php
 namespace App\Mail\Auth;
 
-use App\Entity\User;
+use App\Entity\User\User;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;

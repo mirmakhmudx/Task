@@ -9,7 +9,7 @@ class Kernel extends ConsoleKernel
 {
 
     protected $commands = [
-        Commands\User\VerifyCommand::class,
+        Commands\User\Auth\Verify\VerifyCommand::class,
     ];
 
 

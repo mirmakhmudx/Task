@@ -2,14 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use Database\Seeders\Region\RegionsTableSeeder;
+use Database\Seeders\User\UserTableSeeder;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
         $this->call(UserTableSeeder::class);
+        $this->call(RegionsTableSeeder::class);
     }
 }
