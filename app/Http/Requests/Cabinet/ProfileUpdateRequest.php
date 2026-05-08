@@ -3,7 +3,6 @@
 namespace App\Http\Requests\Cabinet;
 
 use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Support\Facades\Auth;
 
 class ProfileUpdateRequest extends FormRequest
 {
@@ -17,6 +16,7 @@ class ProfileUpdateRequest extends FormRequest
         return [
             'name'      => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
+            'phone'     => ['nullable', 'string', 'max:255', 'regex:/^\+?\d+$/'],
         ];
     }
 }

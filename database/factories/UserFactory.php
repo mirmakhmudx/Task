@@ -13,12 +13,17 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'              => fake()->name(),
+            'name'              => fake()->firstName(),
+            'last_name'         => fake()->lastName(),
             'email'             => fake()->unique()->safeEmail(),
             'password'          => 'password',
             'status'            => User::STATUS_ACTIVE,
             'role'              => User::ROLE_USER,
             'verify_token'      => null,
+            'phone'             => null,
+            'phone_verified'    => false,
+            'phone_verify_token'        => null,
+            'phone_verify_token_expire' => null,
             'email_verified_at' => now(),
             'remember_token'    => Str::random(10),
         ];
@@ -38,6 +43,14 @@ class UserFactory extends Factory
         return $this->state([
             'role'   => User::ROLE_ADMIN,
             'status' => User::STATUS_ACTIVE,
+        ]);
+    }
+
+    public function withPhone(string $phone = '+998901234567'): static
+    {
+        return $this->state([
+            'phone'          => $phone,
+            'phone_verified' => false,
         ]);
     }
 }

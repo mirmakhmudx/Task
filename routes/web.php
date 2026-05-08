@@ -28,6 +28,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/', [ProfileController::class, 'show'])->name('show');
             Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
             Route::put('/edit', [ProfileController::class, 'update'])->name('update');
+
+            Route::post('/phone',        [\App\Http\Controllers\Cabinet\PhoneController::class, 'request'])->name('phone.request');
+            Route::get('/phone',         [\App\Http\Controllers\Cabinet\PhoneController::class, 'form'])->name('phone');
+            Route::put('/phone',         [\App\Http\Controllers\Cabinet\PhoneController::class, 'verify'])->name('phone.verify');
         });
     });
 

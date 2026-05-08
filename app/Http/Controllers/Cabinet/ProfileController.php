@@ -4,11 +4,13 @@
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Cabinet\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
 use Illuminate\View\View;
+use App\Models\Carbon;
 
 class ProfileController extends Controller
 {
@@ -27,14 +29,22 @@ class ProfileController extends Controller
         ]);
     }
 
-    public function update(\App\Http\Requests\Cabinet\ProfileUpdateRequest $request): RedirectResponse
+
+    public function update(ProfileUpdateRequest $request): RedirectResponse
     {
         $user = Auth::user();
+
+        $oldPhone = $user->phone;
 
         $user->update([
             'name'      => $request->name,
             'last_name' => $request->last_name,
+            'phone'     => $request->phone,
         ]);
+
+        if ($user->phone !== $oldPhone) {
+            $user->unverifyPhone();
+        }
 
         return redirect()->route('cabinet.profile.show')
             ->with('success', 'Profile yangilandi.');
