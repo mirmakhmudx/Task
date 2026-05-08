@@ -2,8 +2,8 @@
 
 namespace App\Http\Requests\Auth;
 
+use App\Models\User;
 use Illuminate\Auth\Events\Lockout;
-use Illuminate\Contracts\Validation\ValidationRule;
 use Illuminate\Foundation\Http\FormRequest;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\RateLimiter;
@@ -12,21 +12,18 @@ use Illuminate\Validation\ValidationException;
 
 class LoginRequest extends FormRequest
 {
-
     public function authorize(): bool
     {
         return true;
     }
 
-
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'email'    => ['required', 'string', 'email'],
             'password' => ['required', 'string'],
         ];
     }
-
 
     public function authenticate(): void
     {
@@ -40,9 +37,17 @@ class LoginRequest extends FormRequest
             ]);
         }
 
+        // Waiting foydalanuvchi login qila olmaydi
+        if (Auth::user()->isWait()) {
+            Auth::logout();
+
+            throw ValidationException::withMessages([
+                'email' => __('Your account is not activated. Please check your email.'),
+            ]);
+        }
+
         RateLimiter::clear($this->throttleKey());
     }
-
 
     public function ensureIsNotRateLimited(): void
     {

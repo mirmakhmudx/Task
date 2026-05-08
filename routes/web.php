@@ -1,12 +1,12 @@
 <?php
 
-use App\Http\Controllers\{Home\HomeController, Profile\ProfileController};
+use App\Http\Controllers\{Cabinet\ProfileController, Home\HomeController};
+use App\Http\Controllers\Admin\Adverts;
 use App\Http\Controllers\Admin\Region\RegionController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\VerifyController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\Adverts;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/verify/{token}', [VerifyController::class, 'verify'])->name('register.verify');
@@ -23,6 +23,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('cabinet')->name('cabinet.')->group(function () {
         Route::get('/', [CabinetHomeController::class, 'index'])->name('index');
+
+        Route::prefix('profile')->name('profile.')->group(function () {
+            Route::get('/', [ProfileController::class, 'show'])->name('show');
+            Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
+            Route::put('/edit', [ProfileController::class, 'update'])->name('update');
+        });
     });
 
     Route::prefix('admin')->name('admin.')->middleware('can:admin-panel')->group(function () {

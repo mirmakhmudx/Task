@@ -1,9 +1,9 @@
 <?php
 
-namespace App\Http\Controllers\Profile;
+
+namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Auth\Profile\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -13,30 +13,34 @@ use Illuminate\View\View;
 class ProfileController extends Controller
 {
 
-    public function edit(Request $request): View
+    public function show(): View
     {
-        return view('profile.edit', [
-            'user' => $request->user(),
+        return view('cabinet.profile.show', [
+            'user' => Auth::user(),
         ]);
     }
 
-
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function edit(): View
     {
-        $request->user()->fill($request->validated());
-
-        if ($request->user()->isDirty('email')) {
-            $request->user()->email_verified_at = null;
-        }
-
-        $request->user()->save();
-
-        return Redirect::route('profile.edit')->with('status', 'profile-updated');
+        return view('cabinet.profile.edit', [
+            'user' => Auth::user(),
+        ]);
     }
 
-    /**
-     * Delete the user's account.
-     */
+    public function update(\App\Http\Requests\Cabinet\ProfileUpdateRequest $request): RedirectResponse
+    {
+        $user = Auth::user();
+
+        $user->update([
+            'name'      => $request->name,
+            'last_name' => $request->last_name,
+        ]);
+
+        return redirect()->route('cabinet.profile.show')
+            ->with('success', 'Profile yangilandi.');
+    }
+
+
     public function destroy(Request $request): RedirectResponse
     {
         $request->validateWithBag('userDeletion', [
