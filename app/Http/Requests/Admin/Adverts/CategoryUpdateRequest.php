@@ -10,7 +10,7 @@ class CategoryUpdateRequest extends FormRequest
 
     public function rules(): array
     {
-        $category = $this->route('category');
+        $category = $this->route('categies');
 
         return [
             'name' => ['required', 'string', 'max:255'],

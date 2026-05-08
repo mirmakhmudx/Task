@@ -13,6 +13,7 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
  * @property string $name
  * @property string $slug
  * @property int|null $parent_id
+ * @property int $sort_order
  * @property Region|null $parent
  * @property Region[] $children
  */
@@ -20,7 +21,7 @@ class Region extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug', 'parent_id'];
+    protected $fillable = ['name', 'slug', 'parent_id', 'sort_order'];
 
     protected static function newFactory(): RegionFactory
     {

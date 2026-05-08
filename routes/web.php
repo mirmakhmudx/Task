@@ -29,15 +29,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::get('/', [HomeController::class, 'dashboard'])->name('home');
         Route::resource('users', UserController::class);
         Route::resource('regions', RegionController::class);
+
+        Route::resource('regions', RegionController::class);
+        Route::post('regions/{region}/first', [RegionController::class, 'first'])->name('regions.first');
+        Route::post('regions/{region}/up',    [RegionController::class, 'up'])->name('regions.up');
+        Route::post('regions/{region}/down',  [RegionController::class, 'down'])->name('regions.down');
+        Route::post('regions/{region}/last',  [RegionController::class, 'last'])->name('regions.last');
+
+
+
+        Route::prefix('adverts')->name('adverts.')->group(function () {
+            Route::resource('categories', Adverts\CategoryController::class)->names('categories');
+
+
+            Route::post('categories/{categies}/first', [Adverts\CategoryController::class, 'first'])->name('categories.first');
+            Route::post('categories/{categies}/up', [Adverts\CategoryController::class, 'up'])->name('categories.up');
+            Route::post('categories/{categies}/down', [Adverts\CategoryController::class, 'down'])->name('categories.down');
+            Route::post('categories/{categies}/last', [Adverts\CategoryController::class, 'last'])->name('categories.last');
+        });
     });
-
-    Route::prefix('adverts')->name('adverts.')->group(function () {
-        Route::resource('categories', Adverts\CategoryController::class)
-            ->names('categories');
-    });
-
-
 
 });
 
-require __DIR__.'/auth.php';
+require __DIR__ . '/auth.php';

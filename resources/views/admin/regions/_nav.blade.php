@@ -14,7 +14,7 @@
         </li>
     </ul>
 
-    @if(request()->routeIs('admin.regions.*') && !request()->routeIs('admin.regions.create'))
+    @if(request()->routeIs('admin.regions.index'))
         <a href="{{ route('admin.regions.create') }}" class="btn btn-primary btn-sm">+ Create</a>
     @endif
 </div>
