@@ -5,6 +5,7 @@ namespace App\Entity\Adverts;
 use Database\Factories\AdvertsCategoryFactory;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Kalnoy\Nestedset\NodeTrait;
 
 /**
@@ -30,5 +31,10 @@ class Category extends Model
     protected static function newFactory(): AdvertsCategoryFactory
     {
         return AdvertsCategoryFactory::new();
+    }
+
+    public function attributes(): HasMany
+    {
+        return $this->hasMany(Attribute::class, 'category_id');
     }
 }

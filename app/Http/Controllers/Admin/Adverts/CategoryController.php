@@ -15,25 +15,31 @@ class CategoryController extends Controller
     public function index(): View
     {
         Gate::authorize('admin-panel');
+
         $categories = Category::defaultOrder()->withDepth()->get();
+
         return view('admin.adverts.categories.index', compact('categories'));
     }
 
     public function create(): View
     {
         Gate::authorize('admin-panel');
+
         $parents = Category::defaultOrder()->withDepth()->get();
+
         return view('admin.adverts.categories.create', compact('parents'));
     }
 
     public function store(CategoryStoreRequest $request): RedirectResponse
     {
         Gate::authorize('admin-panel');
+
         $category = Category::create([
             'name'      => $request->name,
             'slug'      => $request->slug,
             'parent_id' => $request->parent ?: null,
         ]);
+
         return redirect()->route('admin.adverts.categories.show', $category)
             ->with('success', 'Kategoriya yaratildi.');
     }
@@ -41,28 +47,40 @@ class CategoryController extends Controller
     public function show(Category $category): View
     {
         Gate::authorize('admin-panel');
-        $children = $category->children()->defaultOrder()->withDepth()->get();
-        return view('admin.adverts.categories.show', compact('category', 'children'));
+
+        $attributes       = $category->attributes()->orderBy('sort')->get();
+        $parentAttributes = $category->parent
+            ? $category->parent->attributes()->orderBy('sort')->get()
+            : collect();
+        $children         = $category->children()->defaultOrder()->withDepth()->get();
+
+        return view('admin.adverts.categories.show',
+            compact('category', 'attributes', 'parentAttributes', 'children')
+        );
     }
 
     public function edit(Category $category): View
     {
         Gate::authorize('admin-panel');
+
         $parents = Category::defaultOrder()
             ->withDepth()
             ->whereNotDescendantOf($category)
             ->where('id', '!=', $category->id)
             ->get();
+
         return view('admin.adverts.categories.edit', compact('category', 'parents'));
     }
 
     public function update(CategoryUpdateRequest $request, Category $category): RedirectResponse
     {
         Gate::authorize('admin-panel');
+
         $category->update([
             'name' => $request->name,
             'slug' => $request->slug,
         ]);
+
         return redirect()->route('admin.adverts.categories.show', $category)
             ->with('success', 'Saqlandi.');
     }
@@ -70,42 +88,10 @@ class CategoryController extends Controller
     public function destroy(Category $category): RedirectResponse
     {
         Gate::authorize('admin-panel');
+
         $category->delete();
+
         return redirect()->route('admin.adverts.categories.index')
             ->with('success', 'O\'chirildi.');
-    }
-
-    public function first(Category $category): RedirectResponse
-    {
-        Gate::authorize('admin-panel');
-        $sibling = $category->siblings()->defaultOrder()->first();
-        if ($sibling) {
-            $category->insertBeforeNode($sibling);
-        }
-        return redirect()->route('admin.adverts.categories.index');
-    }
-
-    public function up(Category $category): RedirectResponse
-    {
-        Gate::authorize('admin-panel');
-        $category->up();
-        return redirect()->route('admin.adverts.categories.index');
-    }
-
-    public function down(Category $category): RedirectResponse
-    {
-        Gate::authorize('admin-panel');
-        $category->down();
-        return redirect()->route('admin.adverts.categories.index');
-    }
-
-    public function last(Category $category): RedirectResponse
-    {
-        Gate::authorize('admin-panel');
-        $sibling = $category->siblings()->defaultOrder()->last();
-        if ($sibling) {
-            $category->insertAfterNode($sibling);
-        }
-        return redirect()->route('admin.adverts.categories.index');
     }
 }

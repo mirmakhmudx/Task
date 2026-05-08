@@ -32,23 +32,23 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
         Route::resource('regions', RegionController::class);
         Route::post('regions/{region}/first', [RegionController::class, 'first'])->name('regions.first');
-        Route::post('regions/{region}/up',    [RegionController::class, 'up'])->name('regions.up');
-        Route::post('regions/{region}/down',  [RegionController::class, 'down'])->name('regions.down');
-        Route::post('regions/{region}/last',  [RegionController::class, 'last'])->name('regions.last');
-
+        Route::post('regions/{region}/up', [RegionController::class, 'up'])->name('regions.up');
+        Route::post('regions/{region}/down', [RegionController::class, 'down'])->name('regions.down');
+        Route::post('regions/{region}/last', [RegionController::class, 'last'])->name('regions.last');
 
 
         Route::prefix('adverts')->name('adverts.')->group(function () {
             Route::resource('categories', Adverts\CategoryController::class)->names('categories');
 
-
-            Route::post('categories/{categies}/first', [Adverts\CategoryController::class, 'first'])->name('categories.first');
-            Route::post('categories/{categies}/up', [Adverts\CategoryController::class, 'up'])->name('categories.up');
-            Route::post('categories/{categies}/down', [Adverts\CategoryController::class, 'down'])->name('categories.down');
-            Route::post('categories/{categies}/last', [Adverts\CategoryController::class, 'last'])->name('categories.last');
+            Route::prefix('categories/{category}')->name('categories.')->group(function () {
+                Route::get('/attributes/create', [Adverts\AttributeController::class, 'create'])->name('attributes.create');
+                Route::post('/attributes', [Adverts\AttributeController::class, 'store'])->name('attributes.store');
+                Route::get('/attributes/{attribute}/edit', [Adverts\AttributeController::class, 'edit'])->name('attributes.edit');
+                Route::put('/attributes/{attribute}', [Adverts\AttributeController::class, 'update'])->name('attributes.update');
+                Route::delete('/attributes/{attribute}', [Adverts\AttributeController::class, 'destroy'])->name('attributes.destroy');
+            });
         });
     });
-
 });
 
 require __DIR__ . '/auth.php';

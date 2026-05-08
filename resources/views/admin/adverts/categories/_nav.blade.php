@@ -18,7 +18,8 @@
         </li>
     </ul>
 
-    @if(request()->routeIs('admin.regions.*') && !request()->routeIs('admin.regions.create'))
-        <a href="{{ route('admin.regions.create') }}" class="btn btn-primary btn-sm">+ Create</a>
+    @if(request()->routeIs('admin.adverts.categories.index'))
+        <a href="{{ route('admin.adverts.categories.create') }}"
+           class="btn btn-primary btn-sm">+ Create</a>
     @endif
 </div>
