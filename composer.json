@@ -8,6 +8,7 @@
     "require": {
         "php": "^8.3",
         "diglactic/laravel-breadcrumbs": "^10.1",
+        "kalnoy/nestedset": "^7.0",
         "laravel/framework": "^13.0",
         "laravel/tinker": "^3.0"
     },

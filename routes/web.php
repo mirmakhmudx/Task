@@ -6,13 +6,14 @@ use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\VerifyController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\Admin\Adverts;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/verify/{token}', [VerifyController::class, 'verify'])->name('register.verify');
 
 Route::middleware(['auth', 'verified'])->group(function () {
-
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
+
 
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'edit')->name('profile.edit');
@@ -25,9 +26,17 @@ Route::middleware(['auth', 'verified'])->group(function () {
     });
 
     Route::prefix('admin')->name('admin.')->middleware('can:admin-panel')->group(function () {
+        Route::get('/', [HomeController::class, 'dashboard'])->name('home');
         Route::resource('users', UserController::class);
         Route::resource('regions', RegionController::class);
     });
+
+    Route::prefix('adverts')->name('adverts.')->group(function () {
+        Route::resource('categories', Adverts\CategoryController::class)
+            ->names('categories');
+    });
+
+
 
 });
 
