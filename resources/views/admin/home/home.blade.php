@@ -5,7 +5,7 @@
 
     <div class="card">
         <div class="card-body">
-            <p>Hushhh kelibsiz, {{ Auth::user()->name }}!</p>
+            <p>Xush kelibsiz, {{ Auth::user()->name }}!</p>
         </div>
     </div>
 @endsection
