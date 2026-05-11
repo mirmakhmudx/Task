@@ -45,7 +45,6 @@ class PhoneController extends Controller
             return back()->withErrors(['token' => $e->getMessage()]);
         }
 
-        return redirect()->route('cabinet.profile.show')
-            ->with('success', 'Phone verified successfully.');
+        return redirect()->route('cabinet.profile.show')->with('success', 'Phone verified successfully.');
     }
 }
