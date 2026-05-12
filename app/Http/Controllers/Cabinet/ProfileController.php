@@ -7,7 +7,6 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
-use Illuminate\Validation\Rule;
 use Illuminate\View\View;
 
 class ProfileController extends Controller
@@ -24,22 +23,28 @@ class ProfileController extends Controller
 
     public function update(Request $request): RedirectResponse
     {
-        $user = $request->user();
-
         $request->validate([
-            'name'  => ['required', 'string', 'max:255'],
-            'email' => ['required', 'email', 'max:255',
-                        Rule::unique('users')->ignore($user->id)],
+            'name'      => ['required', 'string', 'max:255'],
+            'last_name' => ['nullable', 'string', 'max:255'],
+            'phone'     => ['nullable', 'string', 'max:255', 'regex:/^\+?\d+$/'],
         ]);
 
-        if ($user->email !== $request->email) {
-            $user->email_verified_at = null;
+        $user = $request->user();
+
+        $data = [
+            'name'      => $request->name,
+            'last_name' => $request->last_name,
+            'phone'     => $request->phone,
+        ];
+
+        // Telefon o'zgarganda verified ni tozala
+        if ($user->phone !== $request->phone) {
+            $data['phone_verified']      = false;
+            $data['phone_verify_token']  = null;
+            $data['phone_verify_token_expire'] = null;
         }
 
-        $user->fill([
-            'name'  => $request->name,
-            'email' => $request->email,
-        ])->save();
+        $user->fill($data)->save();
 
         return redirect()->route('cabinet.profile.show')
             ->with('success', 'Profile yangilandi.');
@@ -52,10 +57,8 @@ class ProfileController extends Controller
         ]);
 
         $user = $request->user();
-
         Auth::logout();
         $user->delete();
-
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

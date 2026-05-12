@@ -20,9 +20,15 @@ class UserFactory extends Factory
             'role'              => User::ROLE_USER,
             'phone'             => '+998' . fake()->numerify('#########'),
             'phone_verified'    => true,
+            'two_factor_auth'   => false,
             'verify_token'      => null,
             'email_verified_at' => now(),
         ];
+    }
+
+    public function wait(): static
+    {
+        return $this->state(['status' => User::STATUS_WAIT]);
     }
 
     public function waiting(): static

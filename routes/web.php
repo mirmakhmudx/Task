@@ -9,7 +9,6 @@ use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use App\Http\Controllers\Cabinet\TwoFactorController;
 use App\Http\Controllers\Cabinet\Adverts\AdvertController;
 
-
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -18,32 +17,36 @@ Route::get('/verify/{token}', [VerifyController::class, 'verify'])->name('regist
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
 
-
     Route::controller(ProfileController::class)->group(function () {
         Route::get('/profile', 'edit')->name('profile.edit');
         Route::patch('/profile', 'update')->name('profile.update');
         Route::delete('/profile', 'destroy')->name('profile.destroy');
     });
 
-    Route::prefix('cabinet')->name('cabinet.')->middleware('filled-profile')->group(function () {
-        Route::get('/', [CabinetHomeController::class, 'index'])->name('index');
+    Route::prefix('cabinet')->name('cabinet.')->group(function () {
 
-        Route::prefix('adverts')->name('adverts.')->group(function () {
-            Route::get('/',      [AdvertController::class, 'index'])->name('index');
-            Route::get('/create',[AdvertController::class, 'create'])->name('create');
-        });
-
+        // filled-profile SHART EMAS
         Route::prefix('profile')->name('profile.')->group(function () {
-            Route::get('/', [ProfileController::class, 'show'])->name('show');
+            Route::get('/',     [ProfileController::class, 'show'])->name('show');
             Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
             Route::put('/edit', [ProfileController::class, 'update'])->name('update');
 
-            Route::post('/phone',        [\App\Http\Controllers\Cabinet\PhoneController::class, 'request'])->name('phone.request');
-            Route::get('/phone',         [\App\Http\Controllers\Cabinet\PhoneController::class, 'form'])->name('phone');
-            Route::put('/phone',         [\App\Http\Controllers\Cabinet\PhoneController::class, 'verify'])->name('phone.verify');
+            Route::get('/phone',  [\App\Http\Controllers\Cabinet\PhoneController::class, 'form'])->name('phone');
+            Route::post('/phone', [\App\Http\Controllers\Cabinet\PhoneController::class, 'request'])->name('phone.request');
+            Route::put('/phone',  [\App\Http\Controllers\Cabinet\PhoneController::class, 'verify'])->name('phone.verify');
 
             Route::post('/two-factor/enable',  [TwoFactorController::class, 'enable'])->name('two_factor.enable');
             Route::post('/two-factor/disable', [TwoFactorController::class, 'disable'])->name('two_factor.disable');
+        });
+
+        // filled-profile SHART
+        Route::middleware('filled-profile')->group(function () {
+            Route::get('/', [CabinetHomeController::class, 'index'])->name('index');
+
+            Route::prefix('adverts')->name('adverts.')->group(function () {
+                Route::get('/',       [AdvertController::class, 'index'])->name('index');
+                Route::get('/create', [AdvertController::class, 'create'])->name('create');
+            });
         });
     });
 
@@ -52,22 +55,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('users', UserController::class);
         Route::resource('regions', RegionController::class);
 
-        Route::resource('regions', RegionController::class);
         Route::post('regions/{region}/first', [RegionController::class, 'first'])->name('regions.first');
-        Route::post('regions/{region}/up', [RegionController::class, 'up'])->name('regions.up');
-        Route::post('regions/{region}/down', [RegionController::class, 'down'])->name('regions.down');
-        Route::post('regions/{region}/last', [RegionController::class, 'last'])->name('regions.last');
-
+        Route::post('regions/{region}/up',    [RegionController::class, 'up'])->name('regions.up');
+        Route::post('regions/{region}/down',  [RegionController::class, 'down'])->name('regions.down');
+        Route::post('regions/{region}/last',  [RegionController::class, 'last'])->name('regions.last');
 
         Route::prefix('adverts')->name('adverts.')->group(function () {
             Route::resource('categories', Adverts\CategoryController::class)->names('categories');
 
             Route::prefix('categories/{category}')->name('categories.')->group(function () {
-                Route::get('/attributes/create', [Adverts\AttributeController::class, 'create'])->name('attributes.create');
-                Route::post('/attributes', [Adverts\AttributeController::class, 'store'])->name('attributes.store');
+                Route::get('/attributes/create',           [Adverts\AttributeController::class, 'create'])->name('attributes.create');
+                Route::post('/attributes',                 [Adverts\AttributeController::class, 'store'])->name('attributes.store');
                 Route::get('/attributes/{attribute}/edit', [Adverts\AttributeController::class, 'edit'])->name('attributes.edit');
-                Route::put('/attributes/{attribute}', [Adverts\AttributeController::class, 'update'])->name('attributes.update');
-                Route::delete('/attributes/{attribute}', [Adverts\AttributeController::class, 'destroy'])->name('attributes.destroy');
+                Route::put('/attributes/{attribute}',      [Adverts\AttributeController::class, 'update'])->name('attributes.update');
+                Route::delete('/attributes/{attribute}',   [Adverts\AttributeController::class, 'destroy'])->name('attributes.destroy');
             });
         });
     });
