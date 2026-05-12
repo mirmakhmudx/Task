@@ -1,55 +1,49 @@
 <?php
 
-
 namespace App\Http\Controllers\Cabinet;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\Cabinet\ProfileUpdateRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Redirect;
+use Illuminate\Validation\Rule;
 use Illuminate\View\View;
-use App\Models\Carbon;
 
 class ProfileController extends Controller
 {
-
     public function show(): View
     {
-        return view('cabinet.profile.show', [
-            'user' => Auth::user(),
-        ]);
+        return view('cabinet.profile.show', ['user' => Auth::user()]);
     }
 
     public function edit(): View
     {
-        return view('cabinet.profile.edit', [
-            'user' => Auth::user(),
-        ]);
+        return view('cabinet.profile.edit', ['user' => Auth::user()]);
     }
 
-    public function update(ProfileUpdateRequest $request): RedirectResponse
+    public function update(Request $request): RedirectResponse
     {
-        $user = Auth::user();
+        $user = $request->user();
 
-        $oldPhone = $user->phone;
-
-        $user->update([
-            'name'      => $request->name,
-            'last_name' => $request->last_name,
-            'phone'     => $request->phone,
+        $request->validate([
+            'name'  => ['required', 'string', 'max:255'],
+            'email' => ['required', 'email', 'max:255',
+                        Rule::unique('users')->ignore($user->id)],
         ]);
 
-        if ($user->phone !== $oldPhone) {
-            $user->unverifyPhone();
-        $user->save();
+        if ($user->email !== $request->email) {
+            $user->email_verified_at = null;
         }
+
+        $user->fill([
+            'name'  => $request->name,
+            'email' => $request->email,
+        ])->save();
 
         return redirect()->route('cabinet.profile.show')
             ->with('success', 'Profile yangilandi.');
     }
-
 
     public function destroy(Request $request): RedirectResponse
     {
@@ -60,7 +54,6 @@ class ProfileController extends Controller
         $user = $request->user();
 
         Auth::logout();
-
         $user->delete();
 
         $request->session()->invalidate();

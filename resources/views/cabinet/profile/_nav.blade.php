@@ -4,6 +4,10 @@
            href="{{ route('cabinet.index') }}">Dashboard</a>
     </li>
     <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('cabinet.adverts.*') ? 'active' : '' }}"
+           href="{{ route('cabinet.adverts.index') }}">Adverts</a>
+    </li>
+    <li class="nav-item">
         <a class="nav-link {{ request()->routeIs('cabinet.profile.*') ? 'active' : '' }}"
            href="{{ route('cabinet.profile.show') }}">Profile</a>
     </li>

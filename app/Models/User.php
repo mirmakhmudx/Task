@@ -91,6 +91,11 @@ class User extends Authenticatable
         }
         $this->update(['status' => self::STATUS_ACTIVE]);
     }
+    protected static function newFactory()
+ {
+   return \Database\Factories\User\UserFactory::new();
+ }
+
 
     // ===== Role =====
 
@@ -219,5 +224,12 @@ class User extends Authenticatable
             throw new DomainException('Two factor auth is already disabled.');
         }
         $this->update(['two_factor_auth' => false]);
+    }
+
+    public function hasFilledProfile(): bool
+    {
+        return !empty($this->name) &&
+            !empty($this->last_name) &&
+            $this->isPhoneVerified();
     }
 }

@@ -57,3 +57,11 @@ Route::middleware('auth')->group(function () {
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
         ->name('logout');
 });
+
+// TwoFactor
+Route::middleware('guest')->group(function () {
+    Route::get('login/phone', [\App\Http\Controllers\Auth\TwoFactorLoginController::class, 'form'])
+        ->name('login.phone');
+    Route::post('login/phone/verify', [\App\Http\Controllers\Auth\TwoFactorLoginController::class, 'verify'])
+        ->name('login.phone.verify');
+});

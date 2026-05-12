@@ -4,20 +4,16 @@ namespace App\Services\Sms;
 
 class ArraySender implements SmsSender
 {
-    private array $log = [];
+    private array $messages = [];
 
-    public function send(string $number, string $text): void
+    public function send(string $number, string $text): bool
     {
-        $this->log[] = [
-            'number' => $number,
-            'text' => $text,
-        ];
+        $this->messages[] = compact('number', 'text');
+        return true;
     }
 
-    public function getLog(): array
+    public function getMessages(): array
     {
-        return $this->log;
+        return $this->messages;
     }
-
-
 }

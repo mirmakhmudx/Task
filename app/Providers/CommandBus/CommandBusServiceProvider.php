@@ -3,7 +3,8 @@
 namespace App\Providers\CommandBus;
 
 use App\CommandBus;
-use App\Commands\User\Auth\Register;
+use App\Console\Commands\User\Auth\Register\Command as RegisterCommand;
+use App\Console\Handlers\User\Auth\Register\Handler as RegisterHandler;
 use Illuminate\Support\ServiceProvider;
 
 class CommandBusServiceProvider extends ServiceProvider
@@ -13,7 +14,7 @@ class CommandBusServiceProvider extends ServiceProvider
         $this->app->singleton(CommandBus::class);
 
         CommandBus::register([
-            \App\Console\Commands\User\Auth\Register\Command::class => Register\Handler::class,
+            RegisterCommand::class => RegisterHandler::class,
         ]);
     }
 }

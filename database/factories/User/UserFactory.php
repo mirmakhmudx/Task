@@ -12,11 +12,14 @@ class UserFactory extends Factory
     public function definition(): array
     {
         return [
-            'name'              => fake()->name(),
+            'name'              => fake()->firstName(),
+            'last_name'         => fake()->lastName(),
             'email'             => fake()->unique()->safeEmail(),
             'password'          => 'password',
             'status'            => User::STATUS_ACTIVE,
             'role'              => User::ROLE_USER,
+            'phone'             => '+998' . fake()->numerify('#########'),
+            'phone_verified'    => true,
             'verify_token'      => null,
             'email_verified_at' => now(),
         ];
@@ -41,6 +44,7 @@ class UserFactory extends Factory
     {
         return $this->state(['role' => User::ROLE_MODERATOR]);
     }
+
     public function unverified(): static
     {
         return $this->state(['email_verified_at' => null]);

@@ -7,6 +7,8 @@ use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\VerifyController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use App\Http\Controllers\Cabinet\TwoFactorController;
+use App\Http\Controllers\Cabinet\Adverts\AdvertController;
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -23,8 +25,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::delete('/profile', 'destroy')->name('profile.destroy');
     });
 
-    Route::prefix('cabinet')->name('cabinet.')->group(function () {
+    Route::prefix('cabinet')->name('cabinet.')->middleware('filled-profile')->group(function () {
         Route::get('/', [CabinetHomeController::class, 'index'])->name('index');
+
+        Route::prefix('adverts')->name('adverts.')->group(function () {
+            Route::get('/',      [AdvertController::class, 'index'])->name('index');
+            Route::get('/create',[AdvertController::class, 'create'])->name('create');
+        });
 
         Route::prefix('profile')->name('profile.')->group(function () {
             Route::get('/', [ProfileController::class, 'show'])->name('show');
