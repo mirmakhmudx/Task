@@ -43,6 +43,7 @@ class ProfileController extends Controller
 
         if ($user->phone !== $oldPhone) {
             $user->unverifyPhone();
+        $user->save();
         }
 
         return redirect()->route('cabinet.profile.show')

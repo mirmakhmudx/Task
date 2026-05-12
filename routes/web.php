@@ -6,6 +6,8 @@ use App\Http\Controllers\Admin\Region\RegionController;
 use App\Http\Controllers\Admin\User\UserController;
 use App\Http\Controllers\Auth\VerifyController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
+use App\Http\Controllers\Cabinet\TwoFactorController;
+
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
@@ -32,6 +34,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/phone',        [\App\Http\Controllers\Cabinet\PhoneController::class, 'request'])->name('phone.request');
             Route::get('/phone',         [\App\Http\Controllers\Cabinet\PhoneController::class, 'form'])->name('phone');
             Route::put('/phone',         [\App\Http\Controllers\Cabinet\PhoneController::class, 'verify'])->name('phone.verify');
+
+            Route::post('/two-factor/enable',  [TwoFactorController::class, 'enable'])->name('two_factor.enable');
+            Route::post('/two-factor/disable', [TwoFactorController::class, 'disable'])->name('two_factor.disable');
         });
     });
 

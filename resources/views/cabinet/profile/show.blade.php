@@ -7,6 +7,14 @@
         <div class="alert alert-success mb-4">{{ session('success') }}</div>
     @endif
 
+    @if($errors->any())
+        <div class="alert alert-danger mb-4">
+            @foreach($errors->all() as $error)
+                <div>{{ $error }}</div>
+            @endforeach
+        </div>
+    @endif
+
     <div class="card">
         <div class="card-body">
             <div class="d-flex align-items-center justify-content-between mb-4">
@@ -48,6 +56,32 @@
                         </td>
                     </tr>
                     <tr style="background:#f8f9fb;">
+                        <td style="font-weight:600;color:#6b7280;border:none;padding:12px 16px;">Two Factor Auth</td>
+                        <td style="border:none;padding:12px 16px;">
+                            @if($user->isTwoFactorEnabled())
+                                <form method="POST" action="{{ route('cabinet.profile.two_factor.disable') }}" class="d-inline">
+                                    @csrf
+                                    <button type="submit"
+                                            style="min-width:48px;padding:4px 12px;border-radius:6px;background:#16a34a;color:#fff;border:none;font-size:0.85rem;font-weight:600;cursor:pointer;">
+                                        On
+                                    </button>
+                                </form>
+                            @else
+                                @if($user->isPhoneVerified())
+                                    <form method="POST" action="{{ route('cabinet.profile.two_factor.enable') }}" class="d-inline">
+                                        @csrf
+                                        <button type="submit"
+                                                style="min-width:48px;padding:4px 12px;border-radius:6px;background:#ef4444;color:#fff;border:none;font-size:0.85rem;font-weight:600;cursor:pointer;">
+                                            Off
+                                        </button>
+                                    </form>
+                                @else
+                                    <span style="color:#9ca3af;font-size:0.82rem;">Phone verification required</span>
+                                @endif
+                            @endif
+                        </td>
+                    </tr>
+                    <tr>
                         <td style="font-weight:600;color:#6b7280;border:none;padding:12px 16px;">Status</td>
                         <td style="border:none;padding:12px 16px;">
                             @if($user->isActive())
