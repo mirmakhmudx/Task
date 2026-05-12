@@ -17,6 +17,7 @@ class ProfileUpdateRequest extends FormRequest
             'name'      => ['required', 'string', 'max:255'],
             'last_name' => ['nullable', 'string', 'max:255'],
             'phone'     => ['nullable', 'string', 'max:255', 'regex:/^\+?\d+$/'],
+
         ];
     }
 }
