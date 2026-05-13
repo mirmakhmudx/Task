@@ -39,7 +39,7 @@ class AdvertController extends Controller
             'category_id' => $request->category_id,
             'region_id'   => $request->region_id ?: null,
             'title'       => $request->title,
-            'content'     => $request->content,
+            'content'     => $request->content ,
             'price'       => $request->price,
             'address'     => $request->address,
             'status'      => Advert::STATUS_DRAFT,
