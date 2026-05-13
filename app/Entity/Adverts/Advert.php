@@ -2,10 +2,11 @@
 
 namespace App\Entity\Adverts;
 
-use App\Entity\Region\Region;
+use App\Entity\Region;
 use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 /**
  * @property int $id
@@ -14,49 +15,59 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
  * @property int|null $region_id
  * @property string $title
  * @property string $content
- * @property string $status
  * @property int|null $price
  * @property string|null $address
+ * @property string $status
+ * @property string|null $reject_reason
+ * @property \Carbon\Carbon|null $published_at
+ * @property \Carbon\Carbon|null $expires_at
  */
 class Advert extends Model
 {
-    public const STATUS_DRAFT = 'draft';
-    public const STATUS_ACTIVE = 'active';
-    public const STATUS_CLOSED = 'closed';
-    public const STATUS_MODERATE = 'moderate';
+    public const STATUS_DRAFT      = 'draft';
+    public const STATUS_MODERATION = 'moderation';
+    public const STATUS_ACTIVE     = 'active';
+    public const STATUS_CLOSED     = 'closed';
 
-    protected $table = 'adverts';
-    protected $fillable = [
-        'user_id', 'category_id', 'region_id',
-        'title', 'content', 'status',
-        'price', 'address', 'latitude', 'longitude',
-        'published_at', 'expires_at',
-    ];
+    protected $table = 'advert_adverts';
 
-    protected function casts()
+    protected $guarded = ['id'];
+
+    protected function casts(): array
     {
-        return ['published_at' => 'datetime', 'expires_at' => 'datetime'];
+        return [
+            'published_at' => 'datetime',
+            'expires_at'   => 'datetime',
+        ];
     }
 
-    public function isDraft():bool {return $this->status === self::STATUS_DRAFT;}
-    public function isActive():bool {return $this->status === self::STATUS_ACTIVE;}
-    public function isClosed():bool {return $this->status === self::STATUS_CLOSED;}
-    public function isModerate():bool {return $this->status === self::STATUS_MODERATE;}
+    public function isDraft(): bool      { return $this->status === self::STATUS_DRAFT; }
+    public function isModeration(): bool { return $this->status === self::STATUS_MODERATION; }
+    public function isActive(): bool     { return $this->status === self::STATUS_ACTIVE; }
+    public function isClosed(): bool     { return $this->status === self::STATUS_CLOSED; }
 
-    public function user():BelongsTo
+    public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
     }
-    public function category():BelongsTo
+
+    public function category(): BelongsTo
     {
         return $this->belongsTo(Category::class);
     }
-    public function region():BelongsTo
+
+    public function region(): BelongsTo
     {
         return $this->belongsTo(Region::class);
     }
 
+    public function values(): HasMany
+    {
+        return $this->hasMany(Value::class, 'advert_id');
+    }
+
+    public function photos(): HasMany
+    {
+        return $this->hasMany(Photo::class, 'advert_id');
+    }
 }
-
-
-

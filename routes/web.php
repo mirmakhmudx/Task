@@ -8,6 +8,7 @@ use App\Http\Controllers\Auth\VerifyController;
 use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use App\Http\Controllers\Cabinet\TwoFactorController;
 use App\Http\Controllers\Cabinet\Adverts\AdvertController;
+use App\Http\Controllers\Cabinet\Adverts\CreateController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -30,6 +31,20 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::resource('adverts', AdvertController::class)->only([
             'index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
 
+        Route::prefix('adverts')->name('adverts.')->group(function () {
+            Route::get('/', [AdvertController::class, 'index'])->name('index');
+
+            Route::prefix('create')->name('create.')->group(function () {
+                Route::get('/', [CreateController::class, 'category'])->name('category');
+                Route::get('/region/{category}', [CreateController::class, 'region'])->name('region');
+                Route::get('/region/{category}/{region}', [CreateController::class, 'region'])->name('region.region');
+                Route::get('/advert/{category}', [CreateController::class, 'advert'])->name('advert');
+                Route::get('/advert/{category}/{region}', [CreateController::class, 'advert'])->name('advert.region');
+                Route::post('/advert/{category}', [CreateController::class, 'store'])->name('store');
+                Route::post('/advert/{category}/{region}', [CreateController::class, 'store'])->name('store.region');
+            });
+        });
+
         Route::prefix('profile')->name('profile.')->group(function () {
             Route::get('/',     [ProfileController::class, 'show'])->name('show');
             Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
@@ -47,10 +62,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('filled-profile')->group(function () {
             Route::get('/', [CabinetHomeController::class, 'index'])->name('index');
 
-            Route::prefix('adverts')->name('adverts.')->group(function () {
-                Route::get('/',       [AdvertController::class, 'index'])->name('index');
-                Route::get('/create', [AdvertController::class, 'create'])->name('create');
-            });
+
         });
     });
 

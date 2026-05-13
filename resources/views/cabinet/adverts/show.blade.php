@@ -54,7 +54,7 @@
                     <td style="border:none;padding:11px 16px;">
                         @if($advert->isActive())
                             <span style="background:#dcfce7;color:#16a34a;font-size:0.78rem;padding:3px 10px;border-radius:20px;">Active</span>
-                        @elseif($advert->isModerate())
+                        @elseif($advert->isModeration())
                             <span style="background:#fef3c7;color:#d97706;font-size:0.78rem;padding:3px 10px;border-radius:20px;">Moderate</span>
                         @elseif($advert->isClosed())
                             <span style="background:#fee2e2;color:#ef4444;font-size:0.78rem;padding:3px 10px;border-radius:20px;">Closed</span>

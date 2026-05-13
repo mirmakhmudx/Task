@@ -11,12 +11,12 @@ class CreateRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'category_id' => ['required', 'integer', 'exists:advert_categories,id'],
-            'region_id'   => ['nullable', 'integer', 'exists:regions,id'],
-            'title'       => ['required', 'string', 'max:255'],
-            'content'     => ['required', 'string'],
-            'price'       => ['nullable', 'integer', 'min:0'],
-            'address'     => ['nullable', 'string', 'max:255'],
+            'title'        => ['required', 'string', 'max:255'],
+            'content'      => ['required', 'string'],
+            'price'        => ['nullable', 'integer', 'min:0'],
+            'address'      => ['nullable', 'string', 'max:255'],
+            'attributes'   => ['nullable', 'array'],
+            'attributes.*' => ['nullable', 'string', 'max:255'],
         ];
     }
 }

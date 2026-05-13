@@ -3,6 +3,7 @@
 namespace App\Entity\Adverts;
 
 use Database\Factories\AdvertsCategoryFactory;
+use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -16,6 +17,7 @@ use Kalnoy\Nestedset\NodeTrait;
  * @property int $depth
  * @property Category|null $parent
  * @property Category[] $children
+ * @property Attribute[] $attributes
  */
 class Category extends Model
 {
@@ -36,5 +38,15 @@ class Category extends Model
     public function attributes(): HasMany
     {
         return $this->hasMany(Attribute::class, 'category_id');
+    }
+
+    // Barcha ajdodlar va o'zining atributlari
+    public function allAttributes(): Collection
+    {
+        $ids = array_merge($this->getAncestors()->pluck('id')->toArray(), [$this->id]);
+
+        return Attribute::whereIn('category_id', $ids)
+            ->orderBy('sort')
+            ->get();
     }
 }
