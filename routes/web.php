@@ -13,6 +13,8 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/verify/{token}', [VerifyController::class, 'verify'])->name('register.verify');
+Route::get('/ajax/regions', [\App\Http\Controllers\Ajax\RegionController::class, 'get'])->name('ajax.regions');
+
 
 Route::middleware(['auth', 'verified'])->group(function () {
     Route::get('/dashboard', [HomeController::class, 'dashboard'])->name('dashboard');
@@ -25,7 +27,9 @@ Route::middleware(['auth', 'verified'])->group(function () {
 
     Route::prefix('cabinet')->name('cabinet.')->group(function () {
 
-        // filled-profile SHART EMAS
+        Route::resource('adverts', AdvertController::class)->only([
+            'index', 'create', 'store', 'show', 'edit', 'update', 'destroy']);
+
         Route::prefix('profile')->name('profile.')->group(function () {
             Route::get('/',     [ProfileController::class, 'show'])->name('show');
             Route::get('/edit', [ProfileController::class, 'edit'])->name('edit');
@@ -39,7 +43,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/two-factor/disable', [TwoFactorController::class, 'disable'])->name('two_factor.disable');
         });
 
-        // filled-profile SHART
+
         Route::middleware('filled-profile')->group(function () {
             Route::get('/', [CabinetHomeController::class, 'index'])->name('index');
 
@@ -61,6 +65,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('regions/{region}/last',  [RegionController::class, 'last'])->name('regions.last');
 
         Route::prefix('adverts')->name('adverts.')->group(function () {
+
             Route::resource('categories', Adverts\CategoryController::class)->names('categories');
 
             Route::prefix('categories/{category}')->name('categories.')->group(function () {
