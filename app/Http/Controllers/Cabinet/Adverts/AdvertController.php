@@ -39,7 +39,7 @@ class AdvertController extends Controller
             'category_id' => $request->category_id,
             'region_id'   => $request->region_id ?: null,
             'title'       => $request->title,
-            'content'     => $request->content ,
+            'content'     => $request->content,
             'price'       => $request->price,
             'address'     => $request->address,
             'status'      => Advert::STATUS_DRAFT,
@@ -57,6 +57,15 @@ class AdvertController extends Controller
 
         $advert->load(['category', 'region', 'values.attribute', 'photos']);
 
-        return view('cabinet.adverts.show', compact('advert'));
+        // O'xshash e'lonlar — bir xil kategoriyadan, o'zidan tashqari, faol
+        $similar = Advert::where('category_id', $advert->category_id)
+            ->where('id', '!=', $advert->id)
+            ->where('status', Advert::STATUS_ACTIVE)
+            ->with(['category', 'photos'])
+            ->latest('published_at')
+            ->take(3)
+            ->get();
+
+        return view('cabinet.adverts.show', compact('advert', 'similar'));
     }
 }
