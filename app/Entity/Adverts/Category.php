@@ -40,7 +40,6 @@ class Category extends Model
         return $this->hasMany(Attribute::class, 'category_id');
     }
 
-    // Barcha ajdodlar va o'zining atributlari
     public function allAttributes(): Collection
     {
         $ids = array_merge($this->getAncestors()->pluck('id')->toArray(), [$this->id]);

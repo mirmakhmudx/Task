@@ -17,7 +17,6 @@ class CreateController extends Controller
         private readonly AdvertService $service
     ) {}
 
-    // 1-qadam: Kategoriya tanlash
     public function category(): View
     {
         $categories = Category::defaultOrder()->withDepth()->get()->toTree();
@@ -25,7 +24,6 @@ class CreateController extends Controller
         return view('cabinet.adverts.create.category', compact('categories'));
     }
 
-    // 2-qadam: Region tanlash
     public function region(Category $category, Region $region = null): View
     {
         $regions = Region::where('parent_id', $region ? $region->id : null)
@@ -37,7 +35,6 @@ class CreateController extends Controller
         );
     }
 
-    // 3-qadam: E'lon ma'lumotlari
     public function advert(Category $category, Region $region = null): View
     {
         return view('cabinet.adverts.create.advert',
@@ -45,7 +42,7 @@ class CreateController extends Controller
         );
     }
 
-    // Saqlash
+
     public function store(CreateRequest $request, Category $category, Region $region = null): RedirectResponse
     {
         try {
