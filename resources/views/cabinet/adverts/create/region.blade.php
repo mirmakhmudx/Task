@@ -1,0 +1,37 @@
+@extends('layouts.app')
+
+@section('content')
+    <div class="card">
+        <div class="card-body">
+            <h5 class="fw-semibold mb-4" style="color:#1a1a2e;">Regionni tanlang</h5>
+
+            @if($region)
+                <p style="color:#6b7280;font-size:0.9rem;">
+                    Hozirgi: <strong>{{ $region->getAddress() }}</strong>
+                </p>
+            @endif
+
+            <div class="list-group mb-3">
+                <a href="{{ route('cabinet.adverts.create.advert', $region
+                ? [$category, $region]
+                : [$category]) }}"
+                   class="list-group-item list-group-item-action"
+                   style="border-radius:10px;margin-bottom:4px;font-size:0.9rem;color:#374151;">
+                    {{ $region ? 'Shu regionni tanlash' : 'Regionsiz davom etish' }}
+                </a>
+            </div>
+
+            @if($regions->count())
+                <div class="list-group">
+                    @foreach($regions as $r)
+                        <a href="{{ route('cabinet.adverts.create.region.region', [$category, $r]) }}"
+                           class="list-group-item list-group-item-action"
+                           style="border-radius:10px;margin-bottom:4px;font-size:0.9rem;color:#374151;">
+                            {{ $r->name }}
+                        </a>
+                    @endforeach
+                </div>
+            @endif
+        </div>
+    </div>
+@endsection
