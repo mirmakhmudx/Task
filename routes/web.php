@@ -9,6 +9,8 @@ use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use App\Http\Controllers\Cabinet\TwoFactorController;
 use App\Http\Controllers\Cabinet\Adverts\AdvertController;
 use App\Http\Controllers\Cabinet\Adverts\CreateController;
+use App\Http\Controllers\Cabinet\Adverts\ManageController;
+
 
 use Illuminate\Support\Facades\Route;
 
@@ -43,6 +45,18 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('/advert/{category}', [CreateController::class, 'store'])->name('store');
                 Route::post('/advert/{category}/{region}', [CreateController::class, 'store'])->name('store.region');
             });
+
+            Route::get('/{advert}/attributes', [ManageController::class, 'editAttributes'])->name('attributes.edit');
+            Route::put('/{advert}/attributes', [ManageController::class, 'updateAttributes'])->name('attributes.update');
+            Route::get('/{advert}/photos', [ManageController::class, 'editPhotos'])->name('photos.edit');
+            Route::post('/{advert}/photos', [ManageController::class, 'updatePhotos'])->name('photos.update');
+            Route::delete('/{advert}/photos/{photo}', [ManageController::class, 'destroyPhoto'])->name('photos.destroy');
+            Route::post('/{advert}/moderation', [ManageController::class, 'sendToModeration'])->name('send-to-moderation');
+            Route::delete('/{advert}', [ManageController::class, 'destroy'])->name('destroy');
+            Route::get('/{advert}', [Adverts\ManageController::class, 'show'])->name('show');
+            Route::post('/{advert}/moderate', [Adverts\ManageController::class, 'moderate'])->name('moderate');
+            Route::post('/{advert}/reject', [Adverts\ManageController::class, 'reject'])->name('reject');
+            Route::delete('/{advert}', [Adverts\ManageController::class, 'destroy'])->name('destroy');
         });
 
         Route::prefix('profile')->name('profile.')->group(function () {

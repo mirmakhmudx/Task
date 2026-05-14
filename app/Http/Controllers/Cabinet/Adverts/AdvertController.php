@@ -51,6 +51,12 @@ class AdvertController extends Controller
 
     public function show(Advert $advert): View
     {
+        if ($advert->user_id !== Auth::id()) {
+            abort(403);
+        }
+
+        $advert->load(['category', 'region', 'values.attribute', 'photos']);
+
         return view('cabinet.adverts.show', compact('advert'));
     }
 }
