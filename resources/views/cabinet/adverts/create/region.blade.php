@@ -12,9 +12,9 @@
             @endif
 
             <div class="list-group mb-3">
-                <a href="{{ route('cabinet.adverts.create.advert', $region
-                ? [$category, $region]
-                : [$category]) }}"
+                <a href="{{ $region
+    ? route('cabinet.adverts.create.advert.region', [$category, $region])
+    : route('cabinet.adverts.create.advert', [$category]) }}"
                    class="list-group-item list-group-item-action"
                    style="border-radius:10px;margin-bottom:4px;font-size:0.9rem;color:#374151;">
                     {{ $region ? 'Shu regionni tanlash' : 'Regionsiz davom etish' }}
