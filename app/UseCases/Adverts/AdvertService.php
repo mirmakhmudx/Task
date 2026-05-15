@@ -15,7 +15,7 @@ use Illuminate\Support\Facades\Storage;
 
 class AdvertService
 {
-    // ==================== CREATE ====================
+
 
     public function create(int $userId, int $categoryId, ?int $regionId, CreateRequest $request): Advert
     {
@@ -91,7 +91,6 @@ class AdvertService
         });
     }
 
-    // ==================== MODERATION ====================
 
     public function sendToModeration(int $id): void
     {
@@ -109,7 +108,6 @@ class AdvertService
         $advert->reject($reason);
     }
 
-    // ==================== LIFECYCLE ====================
 
     public function expire(Advert $advert): void
     {
@@ -122,7 +120,6 @@ class AdvertService
         $advert->delete();
     }
 
-    // ==================== HELPER ====================
 
     private function getAdvert(int $id): Advert
     {

@@ -7,7 +7,6 @@ use RuntimeException;
 
 class CommandBus
 {
-    // Command namespace → Handler namespace mapping
     private static array $map = [];
 
     public static function register(array $map): void
@@ -19,7 +18,6 @@ class CommandBus
     {
         $commandClass = get_class($command);
 
-        // Convention: Command.php → Handler.php (same namespace)
         $handlerClass = isset(self::$map[$commandClass])
             ? self::$map[$commandClass]
             : str_replace('Command', 'Handler', $commandClass);

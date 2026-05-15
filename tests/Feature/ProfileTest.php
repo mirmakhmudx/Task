@@ -27,20 +27,19 @@ class ProfileTest extends TestCase
 
         $response = $this
             ->actingAs($user)
-            ->patch('/profile', [
-                'name' => 'Test User',
-                'email' => 'test@example.com',
+            ->put('/cabinet/profile/edit', [
+                'name'      => 'Test User',
+                'last_name' => 'Testov',
             ]);
 
         $response
             ->assertSessionHasNoErrors()
-            ->assertRedirect('/cabinet/profile');
+            ->assertRedirect(route('cabinet.profile.show'));
 
         $user->refresh();
 
         $this->assertSame('Test User', $user->name);
-        $this->assertSame('test@example.com', $user->email);
-        $this->assertNull($user->email_verified_at);
+        $this->assertSame('Testov', $user->last_name);
     }
 
     public function test_email_verification_status_is_unchanged_when_the_email_address_is_unchanged(): void

@@ -38,9 +38,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
 
         // ---- ADVERTS ----
-        Route::prefix('adverts')->name('adverts.')->group(function () {
+        Route::middleware('filled-profile')->prefix('adverts')->name('adverts.')->group(function () {
 
-            // Index — e'lonlar ro'yxati
             Route::get('/', [AdvertController::class, 'index'])->name('index');
 
             // Create flow
