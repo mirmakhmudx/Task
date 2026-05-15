@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers\Ajax;
 
-use App\Entity\Region;
+use App\Entity\Region\Region;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 

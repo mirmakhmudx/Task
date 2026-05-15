@@ -2,7 +2,7 @@
 
 namespace App\Entity\Adverts;
 
-use App\Entity\Region;
+use App\Entity\Region\Region;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Database\Eloquent\Builder;

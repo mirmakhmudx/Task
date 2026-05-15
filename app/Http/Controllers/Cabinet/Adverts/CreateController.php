@@ -3,7 +3,7 @@
 namespace App\Http\Controllers\Cabinet\Adverts;
 
 use App\Entity\Adverts\Category;
-use App\Entity\Region;
+use App\Entity\Region\Region;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cabinet\Adverts\CreateRequest;
 use App\UseCases\Adverts\AdvertService;

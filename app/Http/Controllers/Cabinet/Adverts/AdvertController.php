@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Cabinet\Adverts;
 
 use App\Entity\Adverts\Advert;
 use App\Entity\Adverts\Category;
-use App\Entity\Region;
+use App\Entity\Region\Region;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Cabinet\Adverts\CreateRequest;
 use Illuminate\Http\RedirectResponse;
@@ -27,7 +27,7 @@ class AdvertController extends Controller
     public function create(): View
     {
         $categories = Category::defaultOrder()->withDepth()->get();
-        $regions    = Region\Region::whereNull('parent_id')->orderBy('name')->get();
+        $regions    = Region::whereNull('parent_id')->orderBy('name')->get();
 
         return view('cabinet.adverts.create', compact('categories', 'regions'));
     }

@@ -4,13 +4,14 @@ namespace App\UseCases\Adverts;
 
 use App\Entity\Adverts\Advert;
 use App\Entity\Adverts\Category;
-use App\Entity\Region;
+use App\Entity\Region\Region;
 use App\Http\Requests\Cabinet\Adverts\AttributesRequest;
 use App\Http\Requests\Cabinet\Adverts\CreateRequest;
 use App\Http\Requests\Cabinet\Adverts\PhotosRequest;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 
 class AdvertService
 {
@@ -63,8 +64,14 @@ class AdvertService
             }
         });
     }
+    public function removePhoto(int $advertId, int $photoId): void
+    {
+        $advert = $this->getAdvert($advertId);
+        $photo = $advert->photos()->findOrFail($photoId);
+        Storage::disk('public')->delete($photo->file);
+        $photo->delete();
+    }
 
-]
     public function editAttributes(int $id, AttributesRequest $request): void
     {
         $advert = $this->getAdvert($id);
