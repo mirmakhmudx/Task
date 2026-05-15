@@ -2,185 +2,207 @@
 
 @section('content')
 
-    {{-- Header --}}
-    <div class="d-flex align-items-center gap-3 mb-4">
-        <a href="{{ route('cabinet.adverts.index') }}"
-           style="display:inline-flex;align-items:center;justify-content:center;width:34px;height:34px;border:1px solid #e5e7eb;border-radius:10px;color:#6b7280;text-decoration:none;background:#fff;">
-            <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M19 12H5M12 5l-7 7 7 7"/>
-            </svg>
-        </a>
-        <div>
-            <h5 class="mb-0 fw-bold" style="color:#111827;letter-spacing:-0.3px;">{{ $advert->title }}</h5>
-            <span style="font-size:0.78rem;color:#9ca3af;">E'lon #{{ $advert->id }}</span>
-        </div>
-        <div class="ms-auto d-flex align-items-center gap-2">
-            @if($advert->isActive())
-                <span style="background:#dcfce7;color:#15803d;font-size:0.8rem;font-weight:600;padding:5px 14px;border-radius:20px;">● Aktiv</span>
-            @elseif($advert->isModeration())
-                <span style="background:#fef9c3;color:#854d0e;font-size:0.8rem;font-weight:600;padding:5px 14px;border-radius:20px;">● Moderatsiya</span>
-            @elseif($advert->isClosed())
-                <span style="background:#fee2e2;color:#b91c1c;font-size:0.8rem;font-weight:600;padding:5px 14px;border-radius:20px;">● Yopiq</span>
-            @else
-                <span style="background:#f3f4f6;color:#6b7280;font-size:0.8rem;font-weight:600;padding:5px 14px;border-radius:20px;">● Qoralama</span>
+    {{-- =================== BREADCRUMB =================== --}}
+    <nav style="margin-bottom:18px;">
+        <ol class="breadcrumb mb-0" style="font-size:0.82rem;background:none;padding:0;">
+            <li class="breadcrumb-item"><a href="{{ route('home') }}" style="color:#2563eb;text-decoration:none;">Home</a></li>
+            <li class="breadcrumb-item"><a href="{{ route('cabinet.adverts.index') }}" style="color:#2563eb;text-decoration:none;">Adverts</a></li>
+            @if($advert->region)
+                <li class="breadcrumb-item"><span style="color:#6b7280;">{{ $advert->region->name }}</span></li>
             @endif
-        </div>
-    </div>
+            @if($advert->category)
+                <li class="breadcrumb-item"><span style="color:#6b7280;">{{ $advert->category->name }}</span></li>
+            @endif
+            <li class="breadcrumb-item active" style="color:#374151;">{{ $advert->title }}</li>
+        </ol>
+    </nav>
 
-    {{-- Alerts --}}
+    {{-- =================== DRAFT / STATUS BANNER =================== --}}
+    @if($advert->isDraft())
+        <div style="background:#fff8e1;border:1px solid #fde68a;border-radius:10px;padding:10px 18px;margin-bottom:18px;font-size:0.88rem;color:#92400e;">
+            It is a draft.
+        </div>
+    @elseif($advert->isModeration())
+        <div style="background:#eff6ff;border:1px solid #bfdbfe;border-radius:10px;padding:10px 18px;margin-bottom:18px;font-size:0.88rem;color:#1d4ed8;">
+            Moderatsiyada.
+        </div>
+    @elseif($advert->isClosed())
+        <div style="background:#fff1f2;border:1px solid #fecdd3;border-radius:10px;padding:10px 18px;margin-bottom:18px;font-size:0.88rem;color:#9f1239;">
+            Yopiq.
+        </div>
+    @endif
+
     @if(session('success'))
-        <div class="mb-3 p-3" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:12px;font-size:0.875rem;color:#15803d;">
+        <div style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;padding:10px 18px;margin-bottom:18px;font-size:0.88rem;color:#15803d;">
             {{ session('success') }}
         </div>
     @endif
 
     @if($errors->any())
-        <div class="mb-3 p-3" style="background:#fff5f5;border:1px solid #fecaca;border-radius:12px;">
-            <ul class="mb-0 ps-3" style="font-size:0.85rem;color:#dc2626;">
-                @foreach($errors->all() as $error)<li>{{ $error }}</li>@endforeach
-            </ul>
+        <div style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:10px 18px;margin-bottom:18px;">
+            @foreach($errors->all() as $error)
+                <div style="font-size:0.85rem;color:#dc2626;">{{ $error }}</div>
+            @endforeach
         </div>
     @endif
 
-    {{-- Action buttons --}}
+    {{-- =================== ACTION BUTTONS =================== --}}
     <div class="d-flex flex-wrap gap-2 mb-4">
         <a href="{{ route('cabinet.adverts.attributes.edit', $advert) }}"
-           style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:0.85rem;font-weight:500;color:#374151;text-decoration:none;background:#fff;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-            </svg>
-            Xususiyatlar
+           class="btn btn-sm"
+           style="background:#fff;border:1px solid #d1d5db;border-radius:8px;color:#374151;font-size:0.84rem;padding:6px 14px;">
+            Edit
         </a>
         <a href="{{ route('cabinet.adverts.photos.edit', $advert) }}"
-           style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #e5e7eb;border-radius:10px;font-size:0.85rem;font-weight:500;color:#374151;text-decoration:none;background:#fff;">
-            <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
-            </svg>
-            Rasmlar ({{ $advert->photos->count() }})
+           class="btn btn-sm"
+           style="background:#fff;border:1px solid #d1d5db;border-radius:8px;color:#374151;font-size:0.84rem;padding:6px 14px;">
+            Photos
         </a>
 
         @if($advert->isDraft())
-            <form method="POST" action="{{ route('cabinet.adverts.send-to-moderation', $advert) }}">
+            <form method="POST" action="{{ route('cabinet.adverts.send-to-moderation', $advert) }}" class="d-inline">
                 @csrf
-                <button type="submit"
-                        style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:none;border-radius:10px;font-size:0.85rem;font-weight:600;color:#fff;background:#2563eb;cursor:pointer;">
-                    <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                        <path d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                    </svg>
-                    Moderatsiyaga yuborish
+                <button type="submit" class="btn btn-sm"
+                        style="background:#16a34a;border:none;border-radius:8px;color:#fff;font-size:0.84rem;font-weight:600;padding:6px 14px;">
+                    Publish
                 </button>
             </form>
         @endif
 
-        <form method="POST" action="{{ route('cabinet.adverts.destroy', $advert) }}"
-              onsubmit="return confirm('E\'lonni o\'chirishni tasdiqlaysizmi?')">
+        <form method="POST" action="{{ route('cabinet.adverts.destroy', $advert) }}" class="d-inline"
+              onsubmit="return confirm('O\'chirishni tasdiqlaysizmi?')">
             @csrf @method('DELETE')
-            <button type="submit"
-                    style="display:inline-flex;align-items:center;gap:6px;padding:8px 16px;border:1px solid #fecaca;border-radius:10px;font-size:0.85rem;font-weight:500;color:#dc2626;background:#fff;cursor:pointer;">
-                <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
-                    <path d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
-                </svg>
-                O'chirish
+            <button type="submit" class="btn btn-sm"
+                    style="background:#ef4444;border:none;border-radius:8px;color:#fff;font-size:0.84rem;font-weight:600;padding:6px 14px;">
+                Delete
             </button>
         </form>
     </div>
 
-    <div class="row g-3">
+    {{-- =================== MAIN CONTENT =================== --}}
+    <div class="row g-4">
 
-        {{-- Left: photos + description + attributes + map --}}
-        <div class="col-md-8">
+        {{-- -------- LEFT COLUMN -------- --}}
+        <div class="col-lg-8">
 
-            {{-- Photos --}}
-            @if($advert->photos->count())
-                <div class="card mb-3" style="border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                    <div class="card-body p-0">
-                        <div style="padding:14px 20px;border-bottom:1px solid #f3f4f6;background:#f9fafb;">
-                            <span style="font-size:0.78rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Rasmlar</span>
-                        </div>
-                        <div class="p-3">
-                            <div class="row g-2">
-                                @foreach($advert->photos as $photo)
-                                    <div class="col-4 col-md-3">
-                                        <img src="{{ Storage::url($photo->file) }}"
-                                             alt="photo"
-                                             style="width:100%;aspect-ratio:1;object-fit:cover;border-radius:8px;">
-                                    </div>
-                                @endforeach
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            @endif
-
-            {{-- Description --}}
-            <div class="card mb-3" style="border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                <div class="card-body p-0">
-                    <div style="padding:14px 20px;border-bottom:1px solid #f3f4f6;background:#f9fafb;">
-                        <span style="font-size:0.78rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Tavsif</span>
-                    </div>
-                    <div style="padding:20px;color:#374151;font-size:0.9rem;line-height:1.7;">
-                        {{ $advert->content }}
-                    </div>
+            {{-- Title + Price --}}
+            <div class="d-flex align-items-start justify-content-between mb-3">
+                <h2 style="font-size:1.6rem;font-weight:700;color:#111827;letter-spacing:-0.4px;margin:0;">
+                    {{ $advert->title }}
+                </h2>
+                <div style="font-size:1.6rem;font-weight:700;color:#111827;white-space:nowrap;margin-left:16px;">
+                    {{ $advert->price ? number_format($advert->price, 0, '.', ' ') : '—' }}
                 </div>
             </div>
 
-            {{-- Attributes --}}
-            @if($advert->values->count())
-                <div class="card mb-3" style="border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                    <div class="card-body p-0">
-                        <div style="padding:14px 20px;border-bottom:1px solid #f3f4f6;background:#f9fafb;">
-                            <span style="font-size:0.78rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Xususiyatlar</span>
-                        </div>
-                        <div style="padding:4px 0;">
-                            @foreach($advert->values as $value)
-                                <div class="d-flex align-items-center justify-content-between"
-                                     style="padding:11px 20px;border-bottom:1px solid #f9fafb;">
-                                    <span style="font-size:0.85rem;color:#6b7280;">{{ $value->attribute->name }}</span>
-                                    <span style="font-size:0.85rem;font-weight:600;color:#111827;">{{ $value->value }}</span>
-                                </div>
-                            @endforeach
-                        </div>
+            {{-- ---- PHOTO GALLERY ---- --}}
+            @if($advert->photos->count())
+                <div style="display:grid;grid-template-columns:1fr 120px;grid-template-rows:repeat(2,100px);gap:6px;margin-bottom:24px;border-radius:12px;overflow:hidden;">
+                    {{-- Main big photo --}}
+                    <div style="grid-row:1/3;">
+                        <img src="{{ Storage::url($advert->photos->first()->file) }}"
+                             alt="{{ $advert->title }}"
+                             style="width:100%;height:100%;object-fit:cover;">
                     </div>
+                    {{-- Small thumbnails (2nd and 3rd photos) --}}
+                    @foreach($advert->photos->skip(1)->take(2) as $photo)
+                        <div>
+                            <img src="{{ Storage::url($photo->file) }}"
+                                 alt="photo"
+                                 style="width:100%;height:100%;object-fit:cover;">
+                        </div>
+                    @endforeach
+                </div>
+
+                {{-- All photos row (4+) --}}
+                @if($advert->photos->count() > 3)
+                    <div style="display:flex;gap:6px;margin-bottom:24px;flex-wrap:wrap;">
+                        @foreach($advert->photos->skip(3) as $photo)
+                            <img src="{{ Storage::url($photo->file) }}"
+                                 alt="photo"
+                                 style="width:80px;height:80px;object-fit:cover;border-radius:8px;">
+                        @endforeach
+                    </div>
+                @endif
+            @else
+                {{-- No photo placeholder --}}
+                <div style="width:100%;height:260px;background:#f3f4f6;border-radius:12px;display:flex;align-items:center;justify-content:center;margin-bottom:24px;">
+                    <svg width="56" height="56" fill="none" stroke="#d1d5db" stroke-width="1.5" viewBox="0 0 24 24">
+                        <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                    </svg>
                 </div>
             @endif
 
-            {{-- Map (Yandex Maps) --}}
-            @if($advert->address)
-                <div class="card mb-3" style="border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
-                    <div class="card-body p-0">
-                        <div style="padding:14px 20px;border-bottom:1px solid #f3f4f6;background:#f9fafb;display:flex;align-items:center;gap:8px;">
-                            <svg width="14" height="14" fill="none" stroke="#6b7280" stroke-width="2" viewBox="0 0 24 24">
-                                <path d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                                <path d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                            </svg>
-                            <span style="font-size:0.78rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Manzil</span>
-                        </div>
-                        <div style="padding:14px 20px 10px;">
-                            <p style="font-size:0.875rem;color:#374151;margin-bottom:12px;">{{ $advert->address }}</p>
-                        </div>
-                        {{-- Yandex Maps iframe --}}
-                        <div style="height:280px;overflow:hidden;">
-                            <iframe
-                                src="https://maps.yandex.ru/?text={{ urlencode($advert->address) }}&z=14&l=map&output=embed"
-                                width="100%"
-                                height="280"
-                                frameborder="0"
-                                allowfullscreen
-                                style="border:none;display:block;">
-                            </iframe>
-                        </div>
-                    </div>
+            {{-- ---- DESCRIPTION ---- --}}
+            @if($advert->content)
+                <div style="margin-bottom:24px;color:#374151;font-size:0.95rem;line-height:1.75;">
+                    {!! nl2br(e($advert->content)) !!}
                 </div>
             @endif
+
+            {{-- ---- MAP ---- --}}
+            @if($advert->address)
+                <div style="margin-bottom:24px;">
+                    <p style="font-size:0.88rem;color:#374151;margin-bottom:10px;">
+                        <strong>Address:</strong> {{ $advert->address }}
+                    </p>
+                    <div id="ymap" style="width:100%;height:320px;border-radius:12px;overflow:hidden;"></div>
+                </div>
+
+                <script src="https://api-maps.yandex.ru/2.1/?lang=ru_RU" type="text/javascript"></script>
+                <script>
+                    ymaps.ready(function () {
+                        var address = @json($advert->address);
+                        ymaps.geocode(address, { results: 1 }).then(function (res) {
+                            var obj = res.geoObjects.get(0);
+                            if (!obj) return;
+                            var coords = obj.geometry.getCoordinates();
+                            var map = new ymaps.Map('ymap', {
+                                center: coords,
+                                zoom: 14,
+                                controls: ['zoomControl', 'fullscreenControl']
+                            });
+                            map.geoObjects.add(new ymaps.Placemark(coords, {
+                                balloonContent: address
+                            }, { preset: 'islands#redDotIcon' }));
+                        });
+                    });
+                </script>
+            @endif
+
+            {{-- ---- SELLER + CONTACTS ---- --}}
+            <div style="margin-bottom:32px;">
+                <p style="font-size:0.9rem;color:#374151;margin-bottom:14px;">
+                    Seller: <strong>{{ $advert->user->name }}</strong>
+                </p>
+                <div class="d-flex gap-2 flex-wrap">
+                    <a href="mailto:"
+                       style="display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:#16a34a;color:#fff;border-radius:8px;text-decoration:none;font-size:0.88rem;font-weight:600;">
+                        <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                            <path d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/>
+                        </svg>
+                        Send Message
+                    </a>
+                    @if($advert->user->phone)
+                        <button onclick="this.textContent='{{ $advert->user->phone }}';this.style.background='#1d4ed8';"
+                                style="display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:#2563eb;color:#fff;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">
+                            <svg width="15" height="15" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                <path d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/>
+                            </svg>
+                            Show Phone Number
+                        </button>
+                    @endif
+                </div>
+            </div>
 
         </div>
 
-        {{-- Right: info card --}}
-        <div class="col-md-4">
-            <div class="card mb-3" style="border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.05);">
+        {{-- -------- RIGHT COLUMN (Info card) -------- --}}
+        <div class="col-lg-4">
+            <div class="card" style="border:1px solid #e5e7eb;border-radius:14px;position:sticky;top:20px;">
                 <div class="card-body p-0">
-                    <div style="padding:14px 20px;border-bottom:1px solid #f3f4f6;background:#f9fafb;">
-                        <span style="font-size:0.78rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Ma'lumotlar</span>
+                    <div style="padding:14px 20px;border-bottom:1px solid #f3f4f6;background:#f9fafb;border-radius:14px 14px 0 0;">
+                        <span style="font-size:0.75rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Ma'lumotlar</span>
                     </div>
                     <div style="padding:4px 0;">
                         <div class="d-flex justify-content-between" style="padding:11px 20px;border-bottom:1px solid #f9fafb;">
@@ -194,12 +216,12 @@
                         <div class="d-flex justify-content-between" style="padding:11px 20px;border-bottom:1px solid #f9fafb;">
                             <span style="font-size:0.85rem;color:#6b7280;">Narx</span>
                             <span style="font-size:0.85rem;font-weight:700;color:#111827;">
-                                {{ $advert->price ? number_format($advert->price, 0, '.', ' ') . ' UZS' : '—' }}
-                            </span>
+                            {{ $advert->price ? number_format($advert->price, 0, '.', ' ') . ' UZS' : '—' }}
+                        </span>
                         </div>
                         <div class="d-flex justify-content-between" style="padding:11px 20px;border-bottom:1px solid #f9fafb;">
                             <span style="font-size:0.85rem;color:#6b7280;">Manzil</span>
-                            <span style="font-size:0.85rem;font-weight:600;color:#111827;text-align:right;max-width:60%;">{{ $advert->address ?? '—' }}</span>
+                            <span style="font-size:0.85rem;font-weight:600;color:#111827;text-align:right;max-width:55%;">{{ $advert->address ?? '—' }}</span>
                         </div>
                         <div class="d-flex justify-content-between" style="padding:11px 20px;border-bottom:1px solid #f9fafb;">
                             <span style="font-size:0.85rem;color:#6b7280;">Yaratilgan</span>
@@ -221,59 +243,80 @@
                 </div>
             </div>
 
+            {{-- Attributes --}}
+            @if($advert->values->count())
+                <div class="card mt-3" style="border:1px solid #e5e7eb;border-radius:14px;">
+                    <div class="card-body p-0">
+                        <div style="padding:14px 20px;border-bottom:1px solid #f3f4f6;background:#f9fafb;border-radius:14px 14px 0 0;">
+                            <span style="font-size:0.75rem;font-weight:700;color:#6b7280;text-transform:uppercase;letter-spacing:0.05em;">Xususiyatlar</span>
+                        </div>
+                        <div style="padding:4px 0;">
+                            @foreach($advert->values as $value)
+                                <div class="d-flex justify-content-between"
+                                     style="padding:10px 20px;border-bottom:1px solid #f9fafb;">
+                                    <span style="font-size:0.84rem;color:#6b7280;">{{ $value->attribute->name }}</span>
+                                    <span style="font-size:0.84rem;font-weight:600;color:#111827;">{{ $value->value }}</span>
+                                </div>
+                            @endforeach
+                        </div>
+                    </div>
+                </div>
+            @endif
+
             {{-- Reject reason --}}
             @if($advert->reject_reason)
-                <div class="card" style="border:1px solid #fecaca;border-radius:14px;background:#fff5f5;">
+                <div class="card mt-3" style="border:1px solid #fecaca;border-radius:14px;background:#fff5f5;">
                     <div class="card-body" style="padding:16px 20px;">
-                        <p style="font-size:0.78rem;font-weight:700;color:#b91c1c;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Rad etish sababi</p>
+                        <p style="font-size:0.75rem;font-weight:700;color:#b91c1c;text-transform:uppercase;letter-spacing:0.05em;margin-bottom:8px;">Rad etish sababi</p>
                         <p style="font-size:0.85rem;color:#374151;margin:0;">{{ $advert->reject_reason }}</p>
                     </div>
                 </div>
             @endif
         </div>
+
     </div>
 
-    {{-- Similar Adverts --}}
-    @if($similar->count())
-        <div class="mt-4">
-            <div class="d-flex align-items-center justify-content-between mb-3">
-                <h6 class="fw-bold mb-0" style="color:#111827;letter-spacing:-0.2px;">O'xshash e'lonlar</h6>
-                <a href="{{ route('cabinet.adverts.index') }}"
-                   style="font-size:0.82rem;color:#6b7280;text-decoration:none;">
-                    Hammasini ko'rish →
-                </a>
-            </div>
+    {{-- =================== SIMILAR ADVERTS =================== --}}
+    @if(isset($similar) && $similar->count())
+        <div style="margin-top:48px;">
+            <h5 style="font-size:1.1rem;font-weight:700;color:#111827;margin-bottom:20px;letter-spacing:-0.2px;">
+                Similar adverts
+            </h5>
             <div class="row g-3">
                 @foreach($similar as $item)
                     <div class="col-md-4">
-                        <a href="{{ route('cabinet.adverts.show', $item) }}"
-                           style="text-decoration:none;display:block;">
-                            <div class="card h-100" style="border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;box-shadow:0 1px 3px rgba(0,0,0,0.04);transition:box-shadow 0.2s;"
-                                 onmouseover="this.style.boxShadow='0 4px 12px rgba(0,0,0,0.08)'"
-                                 onmouseout="this.style.boxShadow='0 1px 3px rgba(0,0,0,0.04)'">
+                        <a href="{{ route('cabinet.adverts.show', $item) }}" style="text-decoration:none;display:block;">
+                            <div style="background:#fff;border:1px solid #e5e7eb;border-radius:14px;overflow:hidden;
+                                    box-shadow:0 1px 4px rgba(0,0,0,0.05);transition:box-shadow 0.2s;height:100%;"
+                                 onmouseover="this.style.boxShadow='0 6px 18px rgba(0,0,0,0.1)'"
+                                 onmouseout="this.style.boxShadow='0 1px 4px rgba(0,0,0,0.05)'">
 
-                                {{-- Image --}}
-                                @if($item->photos->count())
+                                {{-- Thumbnail --}}
+                                @if($item->photos->first())
                                     <img src="{{ Storage::url($item->photos->first()->file) }}"
                                          alt="{{ $item->title }}"
-                                         style="width:100%;height:160px;object-fit:cover;">
+                                         style="width:100%;height:190px;object-fit:cover;display:block;">
                                 @else
-                                    <div style="width:100%;height:160px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
-                                        <svg width="32" height="32" fill="none" stroke="#d1d5db" stroke-width="1.5" viewBox="0 0 24 24">
+                                    <div style="width:100%;height:190px;background:#f3f4f6;display:flex;align-items:center;justify-content:center;">
+                                        <svg width="42" height="42" fill="none" stroke="#d1d5db" stroke-width="1.5" viewBox="0 0 24 24">
                                             <path d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                                         </svg>
                                     </div>
                                 @endif
 
-                                <div style="padding:14px 16px;">
-                                    <p class="mb-1 fw-semibold" style="color:#111827;font-size:0.9rem;line-height:1.3;
-                                       display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;">
+                                {{-- Card body --}}
+                                <div style="padding:14px 16px 16px;">
+                                    <p style="font-size:0.95rem;font-weight:600;color:#2563eb;margin:0 0 6px;
+                                           white-space:nowrap;overflow:hidden;text-overflow:ellipsis;">
                                         {{ $item->title }}
                                     </p>
-                                    <p class="mb-2" style="font-size:0.8rem;color:#9ca3af;">
-                                        {{ $item->category->name }}
-                                    </p>
-                                    <p class="mb-0 fw-bold" style="color:#111827;font-size:0.9rem;">
+                                    @if($item->content)
+                                        <p style="font-size:0.82rem;color:#6b7280;margin:0 0 10px;
+                                               display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden;line-height:1.55;">
+                                            {{ $item->content }}
+                                        </p>
+                                    @endif
+                                    <p style="font-size:0.92rem;font-weight:700;color:#111827;margin:0;">
                                         {{ $item->price ? number_format($item->price, 0, '.', ' ') . ' UZS' : '—' }}
                                     </p>
                                 </div>

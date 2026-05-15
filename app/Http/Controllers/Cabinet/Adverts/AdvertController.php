@@ -55,13 +55,12 @@ class AdvertController extends Controller
             abort(403);
         }
 
-        $advert->load(['category', 'region', 'values.attribute', 'photos']);
+        $advert->load(['category', 'region', 'values.attribute', 'photos', 'user']);
 
-        // O'xshash e'lonlar — bir xil kategoriyadan, o'zidan tashqari, faol
         $similar = Advert::where('category_id', $advert->category_id)
-            ->where('id', '!=', $advert->id)
             ->where('status', Advert::STATUS_ACTIVE)
-            ->with(['category', 'photos'])
+            ->where('id', '!=', $advert->id)
+            ->with(['photos'])
             ->latest('published_at')
             ->take(3)
             ->get();

@@ -17,7 +17,9 @@ class AttributesRequest extends FormRequest
         $items  = [];
 
         foreach ($advert->category->allAttributes() as $attribute) {
-            $rules = [$attribute->required ? 'required' : 'nullable'];
+            $rules = [
+                $attribute->required ? 'required' : 'nullable',
+            ];
 
             if ($attribute->isInteger()) {
                 $rules[] = 'integer';
@@ -39,7 +41,6 @@ class AttributesRequest extends FormRequest
             'title'   => ['required', 'string', 'max:255'],
             'content' => ['required', 'string'],
             'address' => ['nullable', 'string', 'max:255'],
-            'price'   => ['nullable', 'integer', 'min:0'],
         ], $items);
     }
 }
