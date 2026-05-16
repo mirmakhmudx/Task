@@ -9,6 +9,11 @@ use App\Services\Sms\LoggedSms;
 use App\Services\Sms\SmsSender;
 use App\Services\Sms\SmsRu;
 use Illuminate\Contracts\Foundation\Application;
+use App\Http\Router\AdvertsPath;
+use App\Entity\Region\Region;
+use App\Entity\Adverts\Category;
+use Illuminate\Support\Facades\Route;
+
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -39,6 +44,30 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        Route::bind('adverts_path', function (string $value): AdvertsPath {
+            $chunks = explode('/', $value);
+
+            $region = null;
+            do {
+                $slug = reset($chunks);
+                if ($slug && $next = Region::where('slug', $slug)->first()) {
+                    $region = $next;
+                    array_shift($chunks);
+                }
+            } while (!empty($slug) && !empty($next));
+
+            $category = null;
+            do {
+                $slug = reset($chunks);
+                if ($slug && $next = Category::where('slug', $slug)->first()) {
+                    $category = $next;
+                    array_shift($chunks);
+                }
+            } while (!empty($slug) && !empty($next));
+
+            return new AdvertsPath($region, $category);
+        });
     }
 }
 
