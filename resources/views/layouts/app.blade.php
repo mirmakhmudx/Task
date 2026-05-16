@@ -109,6 +109,14 @@
         <div class="container">
             <a class="navbar-brand" href="{{ route('home') }}">{{ config('app.name', 'Laravel') }}</a>
             <div class="collapse navbar-collapse">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link {{ request()->routeIs('adverts.*') ? 'fw-bold' : '' }}"
+                           href="{{ route('adverts.index') }}">
+                            Adverts
+                        </a>
+                    </li>
+                </ul>
                 <ul class="navbar-nav ms-auto">
                     @auth
                     <li class="nav-item dropdown">

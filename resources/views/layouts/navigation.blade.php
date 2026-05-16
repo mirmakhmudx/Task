@@ -11,6 +11,9 @@
                     <x-nav-link :href="route('dashboard')" :active="request()->routeIs('dashboard')">
                         Dashboard
                     </x-nav-link>
+                    <x-nav-link :href="route('adverts.index')" :active="request()->routeIs('adverts.*')">
+                        Adverts
+                    </x-nav-link>
                 </div>
             </div>
 

@@ -62,6 +62,8 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{advert}/moderation', [ManageController::class, 'sendToModeration'])->name('send-to-moderation');
             Route::delete('/{advert}', [ManageController::class, 'destroy'])->name('destroy');
 
+
+
             // Show (owner) — ENG OXIRIDA
             Route::get('/{advert}', [AdvertController::class, 'show'])->name('show');
         });
@@ -108,6 +110,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{advert}/moderate', [Adverts\ManageController::class, 'moderate'])->name('moderate');
             Route::post('/{advert}/reject', [Adverts\ManageController::class, 'reject'])->name('reject');
             Route::delete('/{advert}', [Adverts\ManageController::class, 'destroy'])->name('destroy');
+            Route::get('/{advert}/reject', [Adverts\ManageController::class, 'rejectForm'])->name('reject.form');
         });
     });
 });

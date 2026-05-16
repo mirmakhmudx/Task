@@ -76,6 +76,21 @@
             </button>
         </form>
     </div>
+    @can('admin-panel')
+        @if($advert->isModeration())
+            <form method="POST" action="{{ route('admin.adverts.moderate', $advert) }}" style="display:inline;">
+                @csrf
+                <button type="submit"
+                        style="display:inline-flex;align-items:center;padding:6px 16px;background:#16a34a;border:none;border-radius:8px;color:#fff;font-size:0.84rem;font-weight:600;cursor:pointer;">
+                    Tasdiqlash
+                </button>
+            </form>
+            <a href="{{ route('admin.adverts.reject.form', $advert) }}"
+               style="display:inline-flex;align-items:center;padding:6px 16px;background:#ef4444;border-radius:8px;color:#fff;font-size:0.84rem;font-weight:600;text-decoration:none;">
+                Rad etish
+            </a>
+        @endif
+    @endcan
 
     {{-- MAIN CONTENT --}}
     <div class="row g-4">
