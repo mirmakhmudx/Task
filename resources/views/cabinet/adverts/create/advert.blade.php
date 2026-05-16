@@ -20,7 +20,7 @@
         <div style="width:28px;height:28px;border-radius:50%;background:#111827;color:#fff;font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;">3</div>
     </div>
 
-    {{-- Breadcrumb --}}
+    {{-- Info --}}
     <div class="d-flex align-items-center gap-2 mb-4" style="font-size:0.82rem;color:#9ca3af;">
         <span>Kategoriya: <strong style="color:#374151;">{{ $category->name }}</strong></span>
         @if($region)
@@ -39,9 +39,10 @@
         </div>
     @endif
 
+    {{-- ✅ TO'G'RI: region bo'lsa store.region, bo'lmasa store --}}
     <form method="POST" action="{{ $region
-    ? route('cabinet.adverts.create.store.region', [$category, $region])
-    : route('cabinet.adverts.create.store', $category) }}">
+        ? route('cabinet.adverts.create.store.region', [$category, $region])
+        : route('cabinet.adverts.create.store', [$category]) }}">
         @csrf
 
         <div class="row g-3">

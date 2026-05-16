@@ -122,6 +122,7 @@ class Advert extends Model
         return $this->hasMany(Photo::class, 'advert_id');
     }
 
+    // ==================== SCOPES ====================
 
     public function scopeActive(Builder $query): Builder
     {
@@ -135,9 +136,31 @@ class Advert extends Model
 
     public function scopeForCategory(Builder $query, Category $category): Builder
     {
-        return $query->where('category_id', array_merge(
+        return $query->whereIn('category_id', array_merge(
             [$category->id],
             $category->descendants()->pluck('id')->toArray()
         ));
+    }
+
+    /**
+     * Region va uning barcha bolalar regionlari bo'yicha filter.
+     */
+    public function scopeForRegion(Builder $query, Region $region): Builder
+    {
+        $ids = array_merge(
+            [$region->id],
+            $this->getAllChildIds($region)
+        );
+        return $query->whereIn('region_id', $ids);
+    }
+
+    private function getAllChildIds(Region $region): array
+    {
+        $ids = [];
+        foreach ($region->children as $child) {
+            $ids[] = $child->id;
+            $ids   = array_merge($ids, $this->getAllChildIds($child));
+        }
+        return $ids;
     }
 }

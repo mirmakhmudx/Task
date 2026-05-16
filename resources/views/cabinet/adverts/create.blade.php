@@ -27,7 +27,7 @@
                     </div>
                 @endif
 
-                <form method="POST" action="{{ route('cabinet.adverts.store') }}">
+                <form method="POST" action="{{ route('cabinet.adverts.create.category') }}">
                     @csrf
 
                     {{-- Category --}}
