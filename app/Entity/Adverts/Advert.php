@@ -142,9 +142,7 @@ class Advert extends Model
         ));
     }
 
-    /**
-     * Region va uning barcha bolalar regionlari bo'yicha filter.
-     */
+
     public function scopeForRegion(Builder $query, Region $region): Builder
     {
         $ids = array_merge(
