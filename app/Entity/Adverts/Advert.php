@@ -142,7 +142,6 @@ class Advert extends Model
         ));
     }
 
-
     public function scopeForRegion(Builder $query, Region $region): Builder
     {
         $ids = array_merge(
