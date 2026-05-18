@@ -7,7 +7,8 @@
         <p style="color:#9ca3af;font-size:0.85rem;margin:0;">3-qadam: E'lon ma'lumotlari</p>
     </div>
 
-    {{-- Progress --}}
+
+
     <div class="d-flex align-items-center gap-2 mb-4">
         <div style="width:28px;height:28px;border-radius:50%;background:#16a34a;color:#fff;font-size:0.75rem;font-weight:700;display:flex;align-items:center;justify-content:center;">
             <svg width="13" height="13" fill="none" stroke="#fff" stroke-width="2.5" viewBox="0 0 24 24"><path d="M5 13l4 4L19 7"/></svg>
@@ -173,6 +174,7 @@
                                 {{ $region ? $region->getAddress() : "Ko'rsatilmaydi" }}
                             </div>
                         </div>
+
 
                         <button type="submit"
                                 class="btn w-100 mb-2"

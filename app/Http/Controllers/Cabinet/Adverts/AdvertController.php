@@ -45,6 +45,8 @@ class AdvertController extends Controller
             'status'      => Advert::STATUS_DRAFT,
         ]);
 
+
+
         return redirect()->route('cabinet.adverts.show', $advert)
             ->with('success', 'E\'lon yaratildi.');
     }
