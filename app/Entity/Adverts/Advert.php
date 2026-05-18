@@ -42,7 +42,6 @@ class Advert extends Model
         ];
     }
 
-    // ==================== STATUS CHECKS ====================
 
     public function isDraft(): bool      { return $this->status === self::STATUS_DRAFT; }
     public function isModeration(): bool { return $this->status === self::STATUS_MODERATION; }

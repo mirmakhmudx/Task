@@ -38,4 +38,5 @@ class AdvertController extends Controller
 
         return view('adverts.index', compact('adverts', 'path', 'regions', 'categories'));
     }
+
 }
