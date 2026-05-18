@@ -66,7 +66,6 @@ class AdvertController extends Controller
             ->latest('published_at')
             ->take(3)
             ->get();
-
         return view('cabinet.adverts.show', compact('advert', 'similar'));
     }
 }
