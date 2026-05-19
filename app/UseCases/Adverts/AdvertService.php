@@ -24,9 +24,10 @@ class AdvertService
         $region   = $regionId ? Region::findOrFail($regionId) : null;
 
         return DB::transaction(function () use ($request, $user, $category, $region) {
+
             $advert = Advert::make([
                 'title'   => $request->title,
-                'content' => $request->content,
+                'content' => $request->input('content'),
                 'price'   => $request->price,
                 'address' => $request->address,
                 'status'  => Advert::STATUS_DRAFT,
