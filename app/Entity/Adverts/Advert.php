@@ -70,6 +70,8 @@ class Advert extends Model
             'published_at' => $date,
             'expires_at'   => $date->copy()->addDays(30),
             'status'       => self::STATUS_ACTIVE,
+            'reject_reason' => null,
+
         ]);
     }
 
