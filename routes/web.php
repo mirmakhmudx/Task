@@ -9,6 +9,7 @@ use App\Http\Controllers\Cabinet\HomeController as CabinetHomeController;
 use App\Http\Controllers\Cabinet\TwoFactorController;
 use App\Http\Controllers\Cabinet\Adverts\AdvertController;
 use App\Http\Controllers\Cabinet\Adverts\CreateController;
+use App\Http\Controllers\Cabinet\Adverts\FavoriteController;
 use App\Http\Controllers\Cabinet\Adverts\ManageController;
 use App\Http\Controllers\Adverts\AdvertShowController;
 
@@ -41,6 +42,11 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::middleware('filled-profile')->prefix('adverts')->name('adverts.')->group(function () {
 
             Route::get('/', [AdvertController::class, 'index'])->name('index');
+
+            // Favorites
+            Route::get('/favorites', [FavoriteController::class, 'index'])->name('favorites.index');
+            Route::post('/{advert}/favorites', [FavoriteController::class, 'add'])->name('favorites.add');
+            Route::delete('/{advert}/favorites', [FavoriteController::class, 'remove'])->name('favorites.remove');
 
             // Create flow
             Route::prefix('create')->name('create.')->group(function () {

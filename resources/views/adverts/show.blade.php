@@ -196,6 +196,36 @@
                             Show Phone Number
                         </button>
                     @endif
+
+                    @auth
+                        @php
+                            $isFavorite = \Illuminate\Support\Facades\DB::table('advert_user_favorites')
+                                ->where('user_id', Auth::id())
+                                ->where('advert_id', $advert->id)
+                                ->exists();
+                        @endphp
+                        @if($isFavorite)
+                            <form method="POST"
+                                  action="{{ route('cabinet.adverts.favorites.remove', $advert) }}"
+                                  style="display:inline;">
+                                @csrf @method('DELETE')
+                                <button type="submit"
+                                        style="display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:#6b7280;color:#fff;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">
+                                    ★ Remove from Favorites
+                                </button>
+                            </form>
+                        @else
+                            <form method="POST"
+                                  action="{{ route('cabinet.adverts.favorites.add', $advert) }}"
+                                  style="display:inline;">
+                                @csrf
+                                <button type="submit"
+                                        style="display:inline-flex;align-items:center;gap:7px;padding:10px 20px;background:#f59e0b;color:#fff;border:none;border-radius:8px;font-size:0.88rem;font-weight:600;cursor:pointer;">
+                                    ★ Add to Favorites
+                                </button>
+                            </form>
+                        @endif
+                    @endauth
                 </div>
             </div>
 

@@ -15,6 +15,12 @@ class ManageController extends Controller
         private readonly AdvertService $service
     ) {}
 
+    public function show(Advert $advert): \Illuminate\View\View
+    {
+        Gate::authorize('admin-panel');
+        return view('admin.adverts.show', compact('advert'));
+    }
+
     public function rejectForm(Advert $advert): \Illuminate\View\View
     {
         Gate::authorize('admin-panel');

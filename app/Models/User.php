@@ -2,9 +2,11 @@
 
 namespace App\Models;
 
+use App\Entity\Adverts\Advert;
 use Carbon\Carbon;
 use DomainException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Support\Facades\Hash;
@@ -94,9 +96,9 @@ class User extends Authenticatable
         $this->update(['status' => self::STATUS_ACTIVE]);
     }
     protected static function newFactory()
- {
-   return \Database\Factories\User\UserFactory::new();
- }
+    {
+        return \Database\Factories\User\UserFactory::new();
+    }
 
 
     // ===== Role =====
@@ -200,6 +202,18 @@ class User extends Authenticatable
         $this->phone_verified            = true;
         $this->phone_verify_token        = null;
         $this->phone_verify_token_expire = null;
+    }
+
+    // ===== Favorites =====
+
+    public function favorites(): BelongsToMany
+    {
+        return $this->belongsToMany(Advert::class, 'advert_user_favorites');
+    }
+
+    public function removeFromFavorites(int $advertId): void
+    {
+        $this->favorites()->detach($advertId);
     }
 
     // ===== Two Factor Auth =====
