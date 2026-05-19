@@ -63,6 +63,7 @@ class AdvertService
                     'file' => $file->store('adverts', 'public'),
                 ]);
             }
+            $advert->update();
         });
     }
     public function removePhoto(int $advertId, int $photoId): void

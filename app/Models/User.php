@@ -7,7 +7,9 @@ use DomainException;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
+use Illuminate\Support\Facades\Hash;
 use InvalidArgumentException;
+use Psy\Util\Str;
 
 class User extends Authenticatable
 {
@@ -48,7 +50,7 @@ class User extends Authenticatable
         return static::create([
             'name'         => $name,
             'email'        => $email,
-            'password'     => bcrypt($password),
+            'password'     => Hash::make($password),
             'status'       => self::STATUS_WAIT,
             'role'         => self::ROLE_USER,
             'verify_token' => \Illuminate\Support\Str::uuid(),
@@ -62,7 +64,7 @@ class User extends Authenticatable
             'email'    => $email,
             'role'     => self::ROLE_USER,
             'status'   => self::STATUS_ACTIVE,
-            'password' => bcrypt(\Illuminate\Support\Str::random(16)),
+            'password' => Hash::make(Str::random(12)),
         ]);
     }
 

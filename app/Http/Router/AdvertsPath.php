@@ -5,6 +5,7 @@ namespace App\Http\Router;
 use App\Entity\Adverts\Category;
 use App\Entity\Region\Region;
 use Illuminate\Contracts\Routing\UrlRoutable;
+use Illuminate\Support\Facades\Cache;
 
 class AdvertsPath implements UrlRoutable
 {
@@ -32,13 +33,21 @@ class AdvertsPath implements UrlRoutable
     public function getRouteKey(): string
     {
         $segments = [];
+
         if ($this->region) {
-            $segments[] = $this->region->slug;
+            $segments[] = Cache::rememberForever(
+                "region_path_{$this->region->id}",
+                fn() => $this->region->slug
+            );
         }
+
         if ($this->category) {
-            $segments[] = $this->category->slug;
+            $segments[] = Cache::rememberForever(
+                "category_path_{$this->category->id}",
+                fn() => $this->category->slug
+            );
         }
-        return implode('/', $segments);
+        return implode('/', array_filter($segments));
     }
 
     public function getRouteKeyName(): string
