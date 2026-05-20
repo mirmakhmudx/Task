@@ -21,6 +21,7 @@ services:
             - ./:/var/www
         links:
             - db
+            - elasticsearch
 
     db:
         image: postgres:latest
@@ -31,3 +32,18 @@ services:
             POSTGRES_PASSWORD: root
         ports:
             - "5432:5432"
+
+    elasticsearch:
+        image: elasticsearch:7.17.10
+        container_name: shop-elasticsearch
+        environment:
+            - discovery.type=single-node
+            - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+        ports:
+            - "9200:9200"
+            - "9300:9300"
+        volumes:
+            - es_data:/usr/share/elasticsearch/data
+
+volumes:
+    es_data:
