@@ -151,7 +151,6 @@ class InitCommand extends Command
                 ]
             ]);
         }
-
         $this->info("Muvaffaqiyatli bajarildi! Barcha e'lonlar darslik standarti bo'yicha indekslandi.");
         return true;
     }
