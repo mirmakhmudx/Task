@@ -46,4 +46,10 @@ class Region extends Model
     {
         return ($this->parent ? $this->parent->getAddress() . ', ' : '') . $this->name;
     }
+
+
+    public function scopeRoots($query)
+    {
+        return $query->whereNull('parent_id');
+    }
 }

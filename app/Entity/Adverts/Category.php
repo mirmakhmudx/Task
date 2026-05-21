@@ -48,4 +48,8 @@ class Category extends Model
             ->orderBy('sort')
             ->get();
     }
+    public function scopeRoots($query)
+    {
+        return $query->whereNull('parent_id');
+    }
 }
