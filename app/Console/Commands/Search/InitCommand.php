@@ -5,8 +5,8 @@ namespace App\Console\Commands\Search;
 use Illuminate\Console\Command;
 use Elastic\Elasticsearch\ClientBuilder;
 use Elastic\Elasticsearch\Exception\ClientResponseException;
-use App\Entity\Adverts\Advert\Advert;
-use App\Entity\Adverts\Advert\Value;
+use App\Entity\Adverts\Advert;
+use App\Entity\Adverts\Value;
 
 class InitCommand extends Command
 {
@@ -104,12 +104,14 @@ class InitCommand extends Command
                 ]
             ]
         ]);
+// ... (indeks yaratish qismidan keyin)
         $this->info("Yangi '{$indexName}' indeksi tahlilchilari bilan muvaffaqiyatli yaratildi.");
+        return true;
 
         // 3. Ma'lumotlarni qayta indekslash (Reindex)
         $this->info("Bazadan ma'lumotlarni yuklash boshlandi...");
 
-        $query = Advert::active()->with(['category', 'region', 'values'])->orderBy('id');
+        $query = \App\Entity\Adverts\Advert::active()->with(['category', 'region', 'values'])->orderBy('id');
 
         if ($query->count() === 0) {
             $this->warn("Bazada yuklash uchun aktiv e'lonlar topilmadi.");
@@ -124,7 +126,7 @@ class InitCommand extends Command
                 } while ($region = $region->parent);
             }
 
-            $values = array_map(function (Value $value) {
+            $values = array_map(function (\App\Entity\Adverts\Value $value) {
                 return [
                     'attribute'    => (int) $value->attribute_id,
                     'value_string' => (string) $value->value,

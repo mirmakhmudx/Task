@@ -6,37 +6,43 @@ use App\Entity\Adverts\Advert;
 use App\Entity\Adverts\Category;
 use App\Entity\Region\Region;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Adverts\SearchRequest;
 use App\Http\Router\AdvertsPath;
+use App\UseCases\Adverts\SearchService;
+
 use Illuminate\Http\Request;
 use Illuminate\View\View;
 
 class AdvertController extends Controller
 {
-    public function index(Request $request, AdvertsPath $path): View
+
+    private $search;
+
+    public function __construct(SearchService $search)
     {
-        $query = Advert::active()
-            ->with(['category', 'region', 'photos'])
-            ->orderByDesc('published_at');
-
-        if ($path->region) {
-            $query->forRegion($path->region);
-        }
-
-        if ($path->category) {
-            $query->forCategory($path->category);
-        }
-
-        $adverts = $query->paginate(20);
-
-        $regions = Region::whereNull('parent_id')
-            ->orderBy('name')
-            ->get();
-
-        $categories = Category::whereNull('parent_id')
-            ->with('children')
-            ->get();
-
-        return view('adverts.index', compact('adverts', 'path', 'regions', 'categories'));
+        $this->search = $search;
     }
 
+
+    public function index(SearchRequest $request, \App\Http\Router\AdvertsPath $path)
+    {
+        $category = $path->category;
+        $region = $path->region;
+
+        $page = $request->get('page', 1);
+        $perPage = 20;
+
+        // ES orqali aqlli qidiruvni ishga tushirish qismi
+        $adverts = $this->search->search($category, $region, $request, $perPage, $page);
+
+        $regions = $region
+            ? $region->children()->orderBy('name')->getModels()
+            : Region::roots()->orderBy('name')->getModels();
+
+        $categories = $category
+            ? $category->children()->orderBy('name')->getModels()
+            : Category::roots()->orderBy('name')->getModels();
+
+        return view('adverts.index', compact('category', 'region', 'categories', 'regions', 'adverts'));
+    }
 }
