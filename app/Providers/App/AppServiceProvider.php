@@ -2,24 +2,29 @@
 
 namespace App\Providers\App;
 
-use Illuminate\Pagination\Paginator;
 use Illuminate\Support\ServiceProvider;
+use Illuminate\Pagination\Paginator;
+use Illuminate\Contracts\Foundation\Application;
+use Illuminate\Support\Facades\Route;
+
+// To'g'ri Elasticsearch klasslari
+use Elastic\Elasticsearch\Client;
+use Elastic\Elasticsearch\ClientBuilder;
+
+// Loyihangizning boshqa klasslari
 use App\Services\Sms\ArraySender;
 use App\Services\Sms\LoggedSms;
 use App\Services\Sms\SmsSender;
 use App\Services\Sms\SmsRu;
-use Illuminate\Contracts\Foundation\Application;
 use App\Http\Router\AdvertsPath;
-use App\Entity\Region\Region;
+use App\Entity\Region; // Agar sizda namespace boshqacha bo'lsa, moslab olasiz
 use App\Entity\Adverts\Category;
-use Illuminate\Support\Facades\Route;
-
 
 class AppServiceProvider extends ServiceProvider
 {
-
     public function register(): void
     {
+        // SMS Xizmati singltoni
         $this->app->singleton(SmsSender::class, function (Application $app) {
             $config = $app->make('config')->get('sms');
             $driver = $config['driver'] ?? 'array';
@@ -38,8 +43,16 @@ class AppServiceProvider extends ServiceProvider
 
             return $sender;
         });
-    }
 
+        // TO'G'RI ELASTICSEARCH BINDING
+        $this->app->singleton(Client::class, function () {
+            $hosts = explode(',', env('ELASTICSEARCH_HOSTS', 'http://localhost:9200'));
+
+            return ClientBuilder::create()
+                ->setHosts($hosts)
+                ->build();
+        });
+    }
 
     public function boot(): void
     {
@@ -70,4 +83,3 @@ class AppServiceProvider extends ServiceProvider
         });
     }
 }
-

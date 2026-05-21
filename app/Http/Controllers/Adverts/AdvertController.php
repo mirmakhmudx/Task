@@ -32,7 +32,6 @@ class AdvertController extends Controller
         $page = $request->get('page', 1);
         $perPage = 20;
 
-        // ES orqali aqlli qidiruvni ishga tushirish qismi
         $adverts = $this->search->search($category, $region, $request, $perPage, $page);
 
         $regions = $region
