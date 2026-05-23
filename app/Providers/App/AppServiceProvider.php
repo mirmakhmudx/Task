@@ -7,11 +7,9 @@ use Illuminate\Pagination\Paginator;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Route;
 
-// To'g'ri Elasticsearch klasslari
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
 
-// Loyihangizning boshqa klasslari
 use App\Services\Sms\ArraySender;
 use App\Services\Sms\LoggedSms;
 use App\Services\Sms\SmsSender;
@@ -64,7 +62,7 @@ class AppServiceProvider extends ServiceProvider
             $region = null;
             do {
                 $slug = reset($chunks);
-                if ($slug && $next = Region::where('slug', $slug)->first()) {
+                if ($slug && $next = Region\Region::where('slug', $slug)->first()) {
                     $region = $next;
                     array_shift($chunks);
                 }
