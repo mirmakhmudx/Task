@@ -10,8 +10,8 @@ use App\Http\Requests\Adverts\SearchRequest;
 use App\Http\Router\AdvertsPath;
 use App\UseCases\Adverts\SearchService;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
-use Illuminate\View\View;
 
 class AdvertController extends Controller
 {
@@ -32,22 +32,64 @@ class AdvertController extends Controller
 
         $adverts = $this->search->search($category, $region, $request, $perPage, $page);
 
+        // ── Sub-regionlar + soni ─────────────────────────────────────────────
+        $regionIds = $region
+            ? [$region->id]
+            : Region::roots()->pluck('id')->toArray();
+
+        // Har bir region uchun aktiv e'lonlar soni
+        $regionCounts = Advert::active()
+            ->select('region_id', DB::raw('count(*) as adverts_count'))
+            ->whereIn('region_id', $this->getAllRegionIds($region))
+            ->groupBy('region_id')
+            ->pluck('adverts_count', 'region_id')
+            ->toArray();
+
         $regions = $region
-            ? $region->children()->orderBy('name')->getModels()
-            : Region::roots()->orderBy('name')->getModels();
+            ? $region->children()->orderBy('name')->get()
+            : Region::roots()->orderBy('name')->get();
 
-        $categories = $category
-            ? $category->children()->orderBy('name')->getModels()
-            : Category::roots()->orderBy('name')->getModels();
+        // Har region obyektiga count qo'shamiz
+        $regions->each(function ($r) use ($regionCounts) {
+            $r->adverts_count = $regionCounts[$r->id] ?? 0;
+        });
 
-        // Autocomplete AJAX so'rovi
+        // ── Sub-kategoriyalar + soni ─────────────────────────────────────────
+        $categoryList = $category
+            ? $category->children()->orderBy('name')->get()
+            : Category::roots()->orderBy('name')->get();
+
+        // Har kategoriya uchun aktiv e'lonlar soni
+        $categoryCounts = Advert::active()
+            ->select('category_id', DB::raw('count(*) as adverts_count'))
+            ->groupBy('category_id')
+            ->pluck('adverts_count', 'category_id')
+            ->toArray();
+
+        $categoryList->each(function ($cat) use ($categoryCounts) {
+            $cat->adverts_count = $categoryCounts[$cat->id] ?? 0;
+        });
+
+        // ── Autocomplete AJAX ────────────────────────────────────────────────
         if ($request->ajax() || $request->has('autocomplete')) {
             return $this->autocompleteResponse($adverts, $request);
         }
 
         return view('adverts.index', compact(
-            'category', 'region', 'categories', 'regions', 'adverts', 'path'
+            'category', 'region', 'categoryList', 'regions', 'adverts', 'path'
         ));
+    }
+
+    private function getAllRegionIds(?Region $region): array
+    {
+        if (!$region) {
+            return Region::pluck('id')->toArray();
+        }
+        $ids = [$region->id];
+        foreach ($region->children as $child) {
+            $ids = array_merge($ids, $this->getAllRegionIds($child));
+        }
+        return $ids;
     }
 
     private function autocompleteResponse($adverts, SearchRequest $request): JsonResponse
@@ -55,8 +97,7 @@ class AdvertController extends Controller
         $items = [];
 
         foreach ($adverts->take(6) as $advert) {
-            $photo = $advert->photos->first();
-
+            $photo   = $advert->photos->first();
             $items[] = [
                 'title'    => $advert->title,
                 'url'      => route('adverts.show', $advert),
