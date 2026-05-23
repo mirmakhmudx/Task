@@ -15,7 +15,6 @@ class AdvertShowController extends Controller
         if (!$advert->isActive() && Auth::id() !== $advert->user_id) {
             abort(404);
         }
-
         $advert->load(['category', 'region', 'values.attribute', 'photos', 'user']);
 
         // O'xshash e'lonlar
