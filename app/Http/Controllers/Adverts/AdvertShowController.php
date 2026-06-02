@@ -11,7 +11,6 @@ class AdvertShowController extends Controller
 {
     public function show(Advert $advert): View
     {
-        // Owner bo'lmagan va active bo'lmagan e'lonni ko'rsatma
         if (!$advert->isActive() && Auth::id() !== $advert->user_id) {
             abort(404);
         }
