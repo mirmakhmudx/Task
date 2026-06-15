@@ -15,8 +15,6 @@ class AdvertShowController extends Controller
             abort(404);
         }
         $advert->load(['category', 'region', 'values.attribute', 'photos', 'user']);
-
-        // O'xshash e'lonlar
         $similar = Advert::where('category_id', $advert->category_id)
             ->where('status', Advert::STATUS_ACTIVE)
             ->where('id', '!=', $advert->id)
@@ -24,7 +22,6 @@ class AdvertShowController extends Controller
             ->latest('published_at')
             ->take(3)
             ->get();
-
         return view('adverts.show', compact('advert', 'similar'));
     }
 }
