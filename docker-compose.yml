@@ -11,7 +11,6 @@ services:
             - ./docker/nginx/default.conf:/etc/nginx/conf.d/default.conf
         links:
             - php-fpm
-
     php-fpm:
         build:
             context: .
@@ -22,7 +21,6 @@ services:
         links:
             - db
             - elasticsearch
-
     db:
         image: postgres:latest
         container_name: my-postgres-container
@@ -31,8 +29,7 @@ services:
             POSTGRES_USER: macbookpro
             POSTGRES_PASSWORD: root
         ports:
-            - "5432:5432"
-
+            - "5433:5432"
     elasticsearch:
         image: elasticsearch:7.17.10
         container_name: shop-elasticsearch
@@ -44,6 +41,5 @@ services:
             - "9300:9300"
         volumes:
             - es_data:/usr/share/elasticsearch/data
-
 volumes:
     es_data:
