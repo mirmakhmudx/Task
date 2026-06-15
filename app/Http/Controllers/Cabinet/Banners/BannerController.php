@@ -9,22 +9,25 @@ use Illuminate\View\View;
 
 class BannerController extends Controller
 {
-    public function index()
+    public function index(): View
     {
-        $banners = Banner::ForUser(Auth::user())->with('category', 'region',)->orderBy('id')->paginate(15);
-        return view('cabinet.banners.index', compact('banners'));
+        $banners = Banner::forUser(Auth::user())
+            ->with(['category', 'region'])
+            ->orderByDesc('id')
+            ->paginate(20);
 
+        return view('cabinet.banners.index', compact('banners'));
     }
 
-    public function show(Banner $banner)
+    public function show(Banner $banner): View
     {
-        $this->chekAcces($banner);
+        $this->checkAccess($banner);
         return view('cabinet.banners.show', compact('banner'));
     }
 
-    public function chekAcces(Banner $banner)
+    private function checkAccess(Banner $banner): void
     {
-        if($banned->isOwnedBy(Auth::user())){
+        if (!$banner->isOwnedBy(Auth::user())) {
             abort(403);
         }
     }
