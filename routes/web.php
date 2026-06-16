@@ -14,12 +14,16 @@ use App\Http\Controllers\Cabinet\Adverts\ManageController;
 use App\Http\Controllers\Adverts\AdvertShowController;
 use App\Http\Controllers\Cabinet\Banners\CreateController as BannerCreateController;
 use App\Http\Controllers\Cabinet\Banners\BannerController as CabinetBannerController;
+use App\Http\Controllers\Banners\BannerController as PublicBannerController;
+
 
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', [HomeController::class, 'index'])->name('home');
 Route::get('/verify/{token}', [VerifyController::class, 'verify'])->name('register.verify');
 Route::get('/ajax/regions', [\App\Http\Controllers\Ajax\RegionController::class, 'get'])->name('ajax.regions');
+Route::get('/banner/get', [PublicBannerController::class, 'get'])->name('banner.get');
+Route::get('/banner/click/{banner}', [PublicBannerController::class, 'click'])->name('banner.click');
 
 // ---- Public advert show ----
 Route::get('/adverts/show/{advert}', [AdvertShowController::class, 'show'])->name('adverts.show');
@@ -74,11 +78,12 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{advert}', [AdvertController::class, 'show'])->name('show');
         });
 
-        // ---- BANNERS (alohida guruh!) ----
+        // ---- BANNERS ----
         Route::middleware('filled-profile')->prefix('banners')->name('banners.')->group(function () {
 
             Route::get('/', [CabinetBannerController::class, 'index'])->name('index');
 
+            // Create flow
             Route::prefix('create')->name('create.')->group(function () {
                 Route::get('/', [BannerCreateController::class, 'category'])->name('category');
                 Route::get('/region/{category}', [BannerCreateController::class, 'region'])->name('region');
@@ -89,6 +94,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('/banner/{category}/{region}', [BannerCreateController::class, 'store'])->name('store.region');
             });
 
+            // Manage (mana shular yetishmayotgan edi)
+            Route::get('/{banner}/edit', [CabinetBannerController::class, 'editForm'])->name('edit');
+            Route::put('/{banner}', [CabinetBannerController::class, 'update'])->name('update');
+            Route::get('/{banner}/file', [CabinetBannerController::class, 'fileForm'])->name('file');
+            Route::put('/{banner}/file', [CabinetBannerController::class, 'file'])->name('file.update');
+            Route::post('/{banner}/moderation', [CabinetBannerController::class, 'sendToModeration'])->name('send-to-moderation');
+            Route::delete('/{banner}', [CabinetBannerController::class, 'destroy'])->name('destroy');
+
+            // Show — eng oxirida
             Route::get('/show/{banner}', [CabinetBannerController::class, 'show'])->name('show');
         });
 
