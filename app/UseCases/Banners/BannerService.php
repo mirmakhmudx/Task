@@ -6,6 +6,7 @@ use App\Entity\Adverts\Category;
 use App\Entity\Banner\Banner;
 use App\Entity\Region\Region;
 use App\Http\Requests\Cabinet\Banners\CreateRequest;
+use App\Http\Requests\Cabinet\Banners\EditRequest;
 use App\Models\User;
 use Carbon\Carbon;
 use Illuminate\Http\UploadedFile;
@@ -39,6 +40,17 @@ class BannerService
 
             return $banner;
         });
+    }
+
+    public function edit(int $id, EditRequest $request): void
+    {
+        $banner = $this->getBanner($id);
+        $banner->update([
+            'name'   => $request['name'],
+            'limit'  => $request['limit'],
+            'url'    => $request['url'],
+            'format' => $request['format'],
+        ]);
     }
 
     public function changeFile(int $id, UploadedFile $file): void
