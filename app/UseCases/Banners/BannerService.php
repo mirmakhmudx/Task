@@ -14,7 +14,6 @@ use Illuminate\Support\Facades\Storage;
 
 class BannerService
 {
-    // Yangi banner yaratish (draft holatda)
     public function create(int $userId, int $categoryId, ?int $regionId, CreateRequest $request): Banner
     {
         $user     = User::findOrFail($userId);
@@ -22,8 +21,6 @@ class BannerService
         $region   = $regionId ? Region::findOrFail($regionId) : null;
 
         return DB::transaction(function () use ($request, $user, $category, $region) {
-            // Yuklangan rasmni storage/app/public/banners ichiga saqlaymiz,
-            // $path ga "banners/xxxxx.jpg" qaytadi — shuni bazaga yozamiz
             $path = $request->file('file')->store('banners', 'public');
 
             $banner = Banner::make([
@@ -35,7 +32,6 @@ class BannerService
                 'status' => Banner::STATUS_DRAFT,
             ]);
 
-            // Bog'lanishlarni o'rnatamiz
             $banner->user()->associate($user);
             $banner->category()->associate($category);
             $banner->region()->associate($region);
@@ -45,7 +41,6 @@ class BannerService
         });
     }
 
-    // Rasmni almashtirish (Change File tugmasi): eskisini o'chirib, yangisini saqlaydi
     public function changeFile(int $id, UploadedFile $file): void
     {
         $banner = $this->getBanner($id);
@@ -75,7 +70,6 @@ class BannerService
         $this->getBanner($id)->pay(Carbon::now());
     }
 
-    // O'chirish: rasm faylini ham birga o'chiramiz (axlat qolmasin)
     public function remove(int $id): void
     {
         $banner = $this->getBanner($id);
