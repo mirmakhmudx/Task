@@ -15,6 +15,10 @@
                 <a class="nav-link" href="{{ route('cabinet.adverts.favorites.index') }}">Favorites</a>
             </li>
             <li class="nav-item">
+                <a class="nav-link {{ request()->routeIs('cabinet.banners.*') ? 'active' : '' }}"
+                   href="{{ route('cabinet.banners.index') }}">Banners</a>
+            </li>
+            <li class="nav-item">
                 <a class="nav-link" href="{{ route('cabinet.profile.show') }}">Profile</a>
             </li>
         </ul>

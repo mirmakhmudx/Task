@@ -12,6 +12,8 @@ use App\Http\Controllers\Cabinet\Adverts\CreateController;
 use App\Http\Controllers\Cabinet\Adverts\FavoriteController;
 use App\Http\Controllers\Cabinet\Adverts\ManageController;
 use App\Http\Controllers\Adverts\AdvertShowController;
+use App\Http\Controllers\Cabinet\Banners\CreateController as BannerCreateController;
+use App\Http\Controllers\Cabinet\Banners\BannerController as CabinetBannerController;
 
 use Illuminate\Support\Facades\Route;
 
@@ -48,7 +50,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{advert}/favorites', [FavoriteController::class, 'add'])->name('favorites.add');
             Route::delete('/{advert}/favorites', [FavoriteController::class, 'remove'])->name('favorites.remove');
 
-            // Create flow
+            // Create flow (faqat ADVERT)
             Route::prefix('create')->name('create.')->group(function () {
                 Route::get('/', [CreateController::class, 'category'])->name('category');
                 Route::get('/region/{category}', [CreateController::class, 'region'])->name('region');
@@ -59,7 +61,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::post('/advert/{category}/{region}', [CreateController::class, 'store'])->name('store.region');
             });
 
-            // Manage routes — SHOW dan OLDIN (tartib muhim!)
+            // Manage — SHOW dan OLDIN
             Route::get('/{advert}/attributes', [ManageController::class, 'editAttributes'])->name('attributes.edit');
             Route::put('/{advert}/attributes', [ManageController::class, 'UpdateAttributes'])->name('attributes.update');
             Route::get('/{advert}/photos', [ManageController::class, 'editPhotos'])->name('photos.edit');
@@ -68,10 +70,26 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::post('/{advert}/moderation', [ManageController::class, 'sendToModeration'])->name('send-to-moderation');
             Route::delete('/{advert}', [ManageController::class, 'destroy'])->name('destroy');
 
-
-
             // Show (owner) — ENG OXIRIDA
             Route::get('/{advert}', [AdvertController::class, 'show'])->name('show');
+        });
+
+        // ---- BANNERS (alohida guruh!) ----
+        Route::middleware('filled-profile')->prefix('banners')->name('banners.')->group(function () {
+
+            Route::get('/', [CabinetBannerController::class, 'index'])->name('index');
+
+            Route::prefix('create')->name('create.')->group(function () {
+                Route::get('/', [BannerCreateController::class, 'category'])->name('category');
+                Route::get('/region/{category}', [BannerCreateController::class, 'region'])->name('region');
+                Route::get('/region/{category}/{region}', [BannerCreateController::class, 'region'])->name('region.region');
+                Route::get('/banner/{category}', [BannerCreateController::class, 'banner'])->name('banner');
+                Route::get('/banner/{category}/{region}', [BannerCreateController::class, 'banner'])->name('banner.region');
+                Route::post('/banner/{category}', [BannerCreateController::class, 'store'])->name('store');
+                Route::post('/banner/{category}/{region}', [BannerCreateController::class, 'store'])->name('store.region');
+            });
+
+            Route::get('/show/{banner}', [CabinetBannerController::class, 'show'])->name('show');
         });
 
         // ---- PROFILE ----
