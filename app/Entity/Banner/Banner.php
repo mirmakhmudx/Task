@@ -10,29 +10,13 @@ use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
-/**
- * @property int $id
- * @property int $user_id
- * @property int $category_id
- * @property int|null $region_id
- * @property string $name
- * @property int $limit
- * @property string $url
- * @property string $format
- * @property string|null $file
- * @property string $status
- * @property int $views
- * @property string|null $reject_reason
- * @property Carbon|null $published_at
- */
 class Banner extends Model
 {
-    // Banner hayot sikli (statuslar)
-    public const STATUS_DRAFT      = 'draft';       // yangi yaratilgan
-    public const STATUS_MODERATION = 'moderation';  // moderatsiyaga yuborilgan
-    public const STATUS_WAIT_PAY   = 'wait_pay';    // admin tasdiqladi, to'lov kutilmoqda
-    public const STATUS_ACTIVE     = 'active';      // to'langan, ko'rsatilyapti
-    public const STATUS_CLOSED     = 'closed';      // limit tugadi / yopildi
+    public const STATUS_DRAFT      = 'draft';
+    public const STATUS_MODERATION = 'moderation';
+    public const STATUS_WAIT_PAY   = 'wait_pay';
+    public const STATUS_ACTIVE     = 'active';
+    public const STATUS_CLOSED     = 'closed';
 
     protected $table   = 'banner_banners';
     protected $guarded = ['id'];
@@ -42,7 +26,6 @@ class Banner extends Model
         return ['published_at' => 'datetime'];
     }
 
-    // Format dropdown uchun ruxsat etilgan o'lchamlar
     public static function formatsList(): array
     {
         return [
@@ -53,16 +36,12 @@ class Banner extends Model
         ];
     }
 
-    // ===== Status tekshiruvlari =====
     public function isDraft(): bool        { return $this->status === self::STATUS_DRAFT; }
     public function isOnModeration(): bool { return $this->status === self::STATUS_MODERATION; }
     public function isWaitPay(): bool      { return $this->status === self::STATUS_WAIT_PAY; }
     public function isActive(): bool       { return $this->status === self::STATUS_ACTIVE; }
     public function isClosed(): bool       { return $this->status === self::STATUS_CLOSED; }
 
-    // ===== Biznes metodlar (hayot siklini boshqaradi) =====
-
-    // User: moderatsiyaga yuborish (faqat draft bo'lsa va rasm yuklangan bo'lsa)
     public function sendToModeration(): void
     {
         if (!$this->isDraft()) {
@@ -74,7 +53,6 @@ class Banner extends Model
         $this->update(['status' => self::STATUS_MODERATION]);
     }
 
-    // Admin: tasdiqlash → endi to'lov kutiladi
     public function moderate(): void
     {
         if (!$this->isOnModeration()) {
@@ -86,7 +64,6 @@ class Banner extends Model
         ]);
     }
 
-    // Admin: rad etish → draftga qaytadi, sababi saqlanadi
     public function reject(string $reason): void
     {
         $this->update([
@@ -95,7 +72,6 @@ class Banner extends Model
         ]);
     }
 
-    // To'lov muvaffaqiyatli → banner faollashadi
     public function pay(Carbon $date): void
     {
         if (!$this->isWaitPay()) {
@@ -107,7 +83,7 @@ class Banner extends Model
         ]);
     }
 
-    // Har ko'rsatilganda chaqiriladi: views +1, limitga yetsa — yopiladi
+    // Ko'rsatishni sanash: views +1, limitga yetsa yopiladi
     public function view(): void
     {
         $this->increment('views');
@@ -116,7 +92,12 @@ class Banner extends Model
         }
     }
 
-    // Rasmni almashtirish (Change File tugmasi)
+    // Bosishni sanash: clicks +1
+    public function click(): void
+    {
+        $this->increment('clicks');
+    }
+
     public function changeFile(string $file): void
     {
         $this->update(['file' => $file]);
@@ -127,20 +108,15 @@ class Banner extends Model
         return $this->user_id === $user->id;
     }
 
-    // ===== Bog'lanishlar (relationships) =====
     public function user(): BelongsTo     { return $this->belongsTo(User::class); }
     public function category(): BelongsTo { return $this->belongsTo(Category::class); }
     public function region(): BelongsTo   { return $this->belongsTo(Region::class); }
 
-    // ===== Scope'lar (tez-tez ishlatadigan filtrlar) =====
-
-    // Faqat aktiv bannerlar (saytda ko'rsatish uchun)
     public function scopeActive(Builder $query): Builder
     {
         return $query->where('status', self::STATUS_ACTIVE);
     }
 
-    // Bitta userning bannerlari (kabinet ro'yxati uchun)
     public function scopeForUser(Builder $query, User $user): Builder
     {
         return $query->where('user_id', $user->id);
