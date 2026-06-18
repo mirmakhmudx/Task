@@ -8,9 +8,7 @@ use Illuminate\Support\Facades\Auth;
 
 class TwoFactorController extends Controller
 {
-    /**
-     * Two factor auth yoqish.
-     */
+
     public function enable(): RedirectResponse
     {
         $user = Auth::user();
@@ -24,9 +22,7 @@ class TwoFactorController extends Controller
         return back()->with('success', 'Two factor auth enabled.');
     }
 
-    /**
-     * Two factor auth o'chirish.
-     */
+
     public function disable(): RedirectResponse
     {
         $user = Auth::user();
