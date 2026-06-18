@@ -9,6 +9,10 @@
                href="{{ route('admin.regions.index') }}">Regions</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.pages.*') ? 'active' : '' }}"
+               href="{{ route('admin.pages.index') }}">Pages</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
                href="{{ route('admin.users.index') }}">Users</a>
         </li>

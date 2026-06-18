@@ -88,10 +88,20 @@
                                 <label class="form-label" style="font-size:0.85rem;font-weight:600;color:#374151;">
                                     Manzil <span style="color:#9ca3af;font-weight:400;">(ixtiyoriy)</span>
                                 </label>
-                                <input type="text" name="address" value="{{ old('address') }}"
-                                       class="form-control"
-                                       placeholder="Shahar, ko'cha..."
-                                       style="border-radius:10px;font-size:0.9rem;border-color:#e5e7eb;padding:10px 14px;">
+                                <div class="d-flex gap-2">
+                                    <input type="text" name="address" id="address-input" value="{{ old('address') }}"
+                                           class="form-control"
+                                           placeholder="Shahar, ko'cha..."
+                                           style="border-radius:10px;font-size:0.9rem;border-color:#e5e7eb;padding:10px 14px;">
+                                    <button type="button" id="geo-btn" class="btn"
+                                            title="Joylashuvni aniqlash"
+                                            style="background:#2563eb;color:#fff;border-radius:10px;padding:0 14px;flex-shrink:0;">
+                                        <svg width="16" height="16" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                                        </svg>
+                                    </button>
+                                </div>
+                                <small id="geo-status" style="font-size:0.75rem;color:#9ca3af;"></small>
                             </div>
                         </div>
                     </div>
@@ -192,5 +202,37 @@
         </div>
 
     </form>
+    <script>
+        document.getElementById('geo-btn').addEventListener('click', function () {
+            const status = document.getElementById('geo-status');
+            const input  = document.getElementById('address-input');
+
+            if (!navigator.geolocation) {
+                status.textContent = "Brauzer geolokatsiyani qo'llab-quvvatlamaydi.";
+                return;
+            }
+
+            status.textContent = 'Joylashuv aniqlanmoqda...';
+
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                const lat = pos.coords.latitude;
+                const lon = pos.coords.longitude;
+
+                fetch(`https://nominatim.openstreetmap.org/reverse?format=json&lat=${lat}&lon=${lon}&accept-language=uz`)
+                    .then(r => r.json())
+                    .then(data => {
+                        if (data && data.display_name) {
+                            input.value = data.display_name;
+                            status.textContent = 'Manzil aniqlandi ✓';
+                        } else {
+                            status.textContent = 'Manzil topilmadi.';
+                        }
+                    })
+                    .catch(() => { status.textContent = 'Xatolik yuz berdi.'; });
+            }, function () {
+                status.textContent = "Joylashuvga ruxsat berilmadi.";
+            });
+        });
+    </script>
 
 @endsection
