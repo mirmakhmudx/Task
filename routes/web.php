@@ -15,6 +15,7 @@ use App\Http\Controllers\Adverts\AdvertShowController;
 use App\Http\Controllers\Cabinet\Banners\CreateController as BannerCreateController;
 use App\Http\Controllers\Cabinet\Banners\BannerController as CabinetBannerController;
 use App\Http\Controllers\Banners\BannerController as PublicBannerController;
+use App\Http\Controllers\Admin\Page\PageController as AdminPageController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -131,6 +132,10 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('regions/{region}/up', [RegionController::class, 'up'])->name('regions.up');
         Route::post('regions/{region}/down', [RegionController::class, 'down'])->name('regions.down');
         Route::post('regions/{region}/last', [RegionController::class, 'last'])->name('regions.last');
+        Route::resource('pages', AdminPageController::class)->names('pages');
+        Route::post('pages/{page}/up',   [AdminPageController::class, 'up'])->name('pages.up');
+        Route::post('pages/{page}/down', [AdminPageController::class, 'down'])->name('pages.down');
+        Route::post('pages/upload-image', [AdminPageController::class, 'uploadImage'])->name('pages.upload-image');
 
         Route::prefix('adverts')->name('adverts.')->group(function () {
 
@@ -157,3 +162,6 @@ Route::get('/adverts/{adverts_path?}', [\App\Http\Controllers\Adverts\AdvertCont
     ->name('adverts.index');
 
 require __DIR__ . '/auth.php';
+Route::get('/{path}', [\App\Http\Controllers\Page\PageController::class, 'show'])
+    ->where('path', '.+')
+    ->name('page');
