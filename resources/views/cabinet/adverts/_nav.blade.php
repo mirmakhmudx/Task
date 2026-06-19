@@ -15,4 +15,8 @@
         <a class="nav-link {{ request()->routeIs('cabinet.profile.*') ? 'active' : '' }}"
            href="{{ route('cabinet.profile.show') }}">Profile</a>
     </li>
+    <li class="nav-item">
+        <a class="nav-link {{ request()->routeIs('cabinet.tickets.*') ? 'active' : '' }}"
+           href="{{ route('cabinet.tickets.index') }}">Tickets</a>
+    </li>
 </ul>

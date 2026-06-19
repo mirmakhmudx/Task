@@ -16,6 +16,10 @@
             <a class="nav-link {{ request()->routeIs('admin.users.*') ? 'active' : '' }}"
                href="{{ route('admin.users.index') }}">Users</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.tickets.*') ? 'active' : '' }}"
+               href="{{ route('admin.tickets.index') }}">Tickets</a>
+        </li>
     </ul>
 
     @if(request()->routeIs('admin.users.*') && !request()->routeIs('admin.users.create'))
