@@ -8,7 +8,12 @@
         <li class="nav-item">
             <a class="nav-link" href="{{ route('cabinet.profile.show') }}">Profile</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('cabinet.tickets.*') ? 'active' : '' }}"
+               href="{{ route('cabinet.tickets.index') }}">Tickets</a>
+        </li>
     </ul>
+
 
     <div class="card">
         <div class="card-body text-center py-5" style="color:#9ca3af;">

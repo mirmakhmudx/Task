@@ -16,6 +16,8 @@ use App\Http\Controllers\Cabinet\Banners\CreateController as BannerCreateControl
 use App\Http\Controllers\Cabinet\Banners\BannerController as CabinetBannerController;
 use App\Http\Controllers\Banners\BannerController as PublicBannerController;
 use App\Http\Controllers\Admin\Page\PageController as AdminPageController;
+use App\Http\Controllers\Cabinet\Tickets\TicketController as CabinetTicketController;
+use App\Http\Controllers\Admin\Ticket\TicketController as AdminTicketController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -107,6 +109,16 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/show/{banner}', [CabinetBannerController::class, 'show'])->name('show');
         });
 
+        // ---- TICKETS ----
+        Route::middleware('filled-profile')->prefix('tickets')->name('tickets.')->group(function () {
+            Route::get('/', [CabinetTicketController::class, 'index'])->name('index');
+            Route::get('/create', [CabinetTicketController::class, 'create'])->name('create');
+            Route::post('/', [CabinetTicketController::class, 'store'])->name('store');
+            Route::get('/{ticket}', [CabinetTicketController::class, 'show'])->name('show');
+            Route::post('/{ticket}/messages', [CabinetTicketController::class, 'message'])->name('message');
+            Route::delete('/{ticket}', [CabinetTicketController::class, 'destroy'])->name('destroy');
+        });
+
         // ---- PROFILE ----
         Route::prefix('profile')->name('profile.')->group(function () {
             Route::get('/', [\App\Http\Controllers\Cabinet\ProfileController::class, 'show'])->name('show');
@@ -136,6 +148,14 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('pages/{page}/up',   [AdminPageController::class, 'up'])->name('pages.up');
         Route::post('pages/{page}/down', [AdminPageController::class, 'down'])->name('pages.down');
         Route::post('pages/upload-image', [AdminPageController::class, 'uploadImage'])->name('pages.upload-image');
+        Route::get('tickets', [AdminTicketController::class, 'index'])->name('tickets.index');
+        Route::get('tickets/{ticket}/show', [AdminTicketController::class, 'show'])->name('tickets.show');
+        Route::get('tickets/{ticket}/edit', [AdminTicketController::class, 'editForm'])->name('tickets.edit');
+        Route::put('tickets/{ticket}', [AdminTicketController::class, 'update'])->name('tickets.update');
+        Route::post('tickets/{ticket}/approve', [AdminTicketController::class, 'approve'])->name('tickets.approve');
+        Route::post('tickets/{ticket}/close', [AdminTicketController::class, 'close'])->name('tickets.close');
+        Route::post('tickets/{ticket}/messages', [AdminTicketController::class, 'message'])->name('tickets.message');
+        Route::delete('tickets/{ticket}', [AdminTicketController::class, 'destroy'])->name('tickets.destroy');
 
         Route::prefix('adverts')->name('adverts.')->group(function () {
 
