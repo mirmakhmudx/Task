@@ -116,6 +116,26 @@
                             Adverts
                         </a>
                     </li>
+
+                    {{-- Sayt menyusi: root sahifalar (MenuComposer orqali keladi) --}}
+                    @foreach(($menuMain ?? collect()) as $page)
+                        <li class="nav-item">
+                            <a class="nav-link" href="{{ url($page->slug) }}">{{ $page->menu_title }}</a>
+                        </li>
+                    @endforeach
+
+                    @if(($menuMore ?? collect())->count())
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" data-bs-toggle="dropdown">More...</a>
+                            <ul class="dropdown-menu">
+                                @foreach($menuMore as $page)
+                                    <li>
+                                        <a class="dropdown-item" href="{{ url($page->slug) }}">{{ $page->menu_title }}</a>
+                                    </li>
+                                @endforeach
+                            </ul>
+                        </li>
+                    @endif
                 </ul>
                 <ul class="navbar-nav ms-auto">
                     @auth

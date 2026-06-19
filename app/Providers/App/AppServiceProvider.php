@@ -6,6 +6,7 @@ use Illuminate\Support\ServiceProvider;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Contracts\Foundation\Application;
 use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Facades\View;
 
 use Elastic\Elasticsearch\Client;
 use Elastic\Elasticsearch\ClientBuilder;
@@ -17,6 +18,7 @@ use App\Services\Sms\SmsRu;
 use App\Http\Router\AdvertsPath;
 use App\Entity\Region; // Agar sizda namespace boshqacha bo'lsa, moslab olasiz
 use App\Entity\Adverts\Category;
+use App\View\Composers\MenuComposer;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -55,6 +57,9 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Paginator::useBootstrapFive();
+
+        // Sayt menyusi (root sahifalar) — har bir layouts.app render bo'lganda uzatiladi
+        View::composer('layouts.app', MenuComposer::class);
 
         Route::bind('adverts_path', function (string $value): AdvertsPath {
             $chunks = explode('/', $value);
