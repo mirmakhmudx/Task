@@ -12,6 +12,10 @@
             <a class="nav-link {{ request()->routeIs('cabinet.tickets.*') ? 'active' : '' }}"
                href="{{ route('cabinet.tickets.index') }}">Tickets</a>
         </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('cabinet.dialogs.*') ? 'active' : '' }}"
+               href="{{ route('cabinet.dialogs.index') }}">Dialogs</a>
+        </li>
     </ul>
 
 

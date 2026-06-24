@@ -50,5 +50,4 @@ class AttributeController extends Controller
         $attribute->delete();
         return redirect()->route('admin.adverts.categories.show', $category)->with('success', 'O\'chirildi.');
     }
-
 }
