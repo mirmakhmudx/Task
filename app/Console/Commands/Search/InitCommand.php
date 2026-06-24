@@ -5,13 +5,11 @@ namespace App\Console\Commands\Search;
 use Illuminate\Console\Command;
 use Elastic\Elasticsearch\ClientBuilder;
 use Elastic\Elasticsearch\Exception\ClientResponseException;
-use App\Entity\Adverts\Advert;
-use App\Entity\Adverts\Value;
 
 class InitCommand extends Command
 {
     protected $signature = 'search:init';
-    protected $description = 'Elasticsearch-da "app" indeksini darslik bo\'yicha to\'liq sozlash va reindex qilish';
+    protected $description = 'Elasticsearch-da "app" indeksini sozlash (settings + mappings)';
 
     private $client;
 
@@ -23,7 +21,7 @@ class InitCommand extends Command
         $this->client = ClientBuilder::create()->setHosts($hosts)->build();
     }
 
-    public function handle(): bool
+    public function handle(): int
     {
         $indexName = 'app';
 
@@ -37,7 +35,7 @@ class InitCommand extends Command
             }
         }
 
-        // 2. Indeks sozlamalari (Settings va Mappings) - Rasmdagi aniq variant
+        // 2. Indeks sozlamalari (settings + mappings)
         $this->client->indices()->create([
             'index' => $indexName,
             'body'  => [
@@ -67,13 +65,13 @@ class InitCommand extends Command
                             ]
                         ],
                         'analyzer' => [
-                            'default' => [ // Muallif yozganidek butun indeks uchun default tahlilchi
+                            'default' => [
                                 'type' => 'custom',
                                 'char_filter' => [
                                     'html_strip',
                                     'replace'
                                 ],
-                                'tokenizer' => 'whitespace', // Rasmdagi aniq tokenizer
+                                'tokenizer' => 'whitespace',
                                 'filter' => [
                                     'lowercase',
                                     'word_delimiter'
@@ -86,8 +84,8 @@ class InitCommand extends Command
                     'properties' => [
                         'id'           => ['type' => 'integer'],
                         'published_at' => ['type' => 'date', 'format' => 'strict_date_optional_time||epoch_millis'],
-                        'title'        => ['type' => 'text'], // Analyzer yozish shartmas, default o'zi ulanadi
-                        'content'      => ['type' => 'text'], // Analyzer yozish shartmas, default o'zi ulanadi
+                        'title'        => ['type' => 'text'],
+                        'content'      => ['type' => 'text'],
                         'price'        => ['type' => 'integer'],
                         'status'       => ['type' => 'keyword'],
                         'categories'   => ['type' => 'integer'],
@@ -104,56 +102,10 @@ class InitCommand extends Command
                 ]
             ]
         ]);
-// ... (indeks yaratish qismidan keyin)
-        $this->info("Yangi '{$indexName}' indeksi tahlilchilari bilan muvaffaqiyatli yaratildi.");
-        return true;
 
-        // 3. Ma'lumotlarni qayta indekslash (Reindex)
-        $this->info("Bazadan ma'lumotlarni yuklash boshlandi...");
+        $this->info("Yangi '{$indexName}' indeksi muvaffaqiyatli yaratildi.");
+        $this->line("Ma'lumotlarni indekslash uchun: php artisan search:reindex");
 
-        $query = \App\Entity\Adverts\Advert::active()->with(['category', 'region', 'values'])->orderBy('id');
-
-        if ($query->count() === 0) {
-            $this->warn("Bazada yuklash uchun aktiv e'lonlar topilmadi.");
-            return true;
-        }
-
-        foreach ($query->cursor() as $advert) {
-            $regions = [];
-            if ($region = $advert->region) {
-                do {
-                    $regions[] = (int) $region->id;
-                } while ($region = $region->parent);
-            }
-
-            $values = array_map(function (\App\Entity\Adverts\Value $value) {
-                return [
-                    'attribute'    => (int) $value->attribute_id,
-                    'value_string' => (string) $value->value,
-                    'value_int'    => is_numeric($value->value) ? (int) $value->value : null,
-                ];
-            }, $advert->values()->getModels());
-
-            $this->client->index([
-                'index' => $indexName,
-                'id'    => $advert->id,
-                'body'  => [
-                    'id'           => (int) $advert->id,
-                    'published_at' => $advert->published_at ? $advert->published_at->toIso8601String() : null,
-                    'title'        => $advert->title,
-                    'content'      => $advert->content,
-                    'price'        => (int) $advert->price,
-                    'status'       => $advert->status,
-                    'categories'   => array_merge(
-                        [$advert->category->id],
-                        $advert->category->ancestors()->pluck('id')->toArray()
-                    ),
-                    'regions'      => $regions,
-                    'values'       => $values,
-                ]
-            ]);
-        }
-        $this->info("Muvaffaqiyatli bajarildi! Barcha e'lonlar darslik standarti bo'yicha indekslandi.");
-        return true;
+        return self::SUCCESS;
     }
 }
