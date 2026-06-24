@@ -18,6 +18,7 @@ use App\Http\Controllers\Banners\BannerController as PublicBannerController;
 use App\Http\Controllers\Admin\Page\PageController as AdminPageController;
 use App\Http\Controllers\Cabinet\Tickets\TicketController as CabinetTicketController;
 use App\Http\Controllers\Admin\Ticket\TicketController as AdminTicketController;
+use App\Http\Controllers\Cabinet\Dialogs\DialogController as CabinetDialogController;
 
 
 use Illuminate\Support\Facades\Route;
@@ -76,6 +77,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/{advert}/photos/{photo}', [ManageController::class, 'destroyPhoto'])->name('photos.destroy');
             Route::post('/{advert}/moderation', [ManageController::class, 'sendToModeration'])->name('send-to-moderation');
             Route::delete('/{advert}', [ManageController::class, 'destroy'])->name('destroy');
+            Route::get('/adverts', [\App\Http\Controllers\Admin\Adverts\ManageController::class, 'index'])->name('index');
 
             // Show (owner) — ENG OXIRIDA
             Route::get('/{advert}', [AdvertController::class, 'show'])->name('show');
@@ -117,6 +119,13 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::get('/{ticket}', [CabinetTicketController::class, 'show'])->name('show');
             Route::post('/{ticket}/messages', [CabinetTicketController::class, 'message'])->name('message');
             Route::delete('/{ticket}', [CabinetTicketController::class, 'destroy'])->name('destroy');
+        });
+        // ---- DIALOGS ----
+        Route::middleware('filled-profile')->prefix('dialogs')->name('dialogs.')->group(function () {
+            Route::get('/', [CabinetDialogController::class, 'index'])->name('index');
+            Route::post('/write/{advert}', [CabinetDialogController::class, 'write'])->name('write');
+            Route::get('/{dialog}', [CabinetDialogController::class, 'show'])->name('show');
+            Route::post('/{dialog}/messages', [CabinetDialogController::class, 'message'])->name('message');
         });
 
         // ---- PROFILE ----
