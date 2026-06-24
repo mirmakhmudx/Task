@@ -350,5 +350,6 @@
             </div>
         </div>
     @endif
+    @include('adverts._write_seller')
 
 @endsection
