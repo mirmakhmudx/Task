@@ -6,10 +6,9 @@ class ArraySender implements SmsSender
 {
     private array $messages = [];
 
-    public function send(string $number, string $text): bool
+    public function send(string $number, string $text): void
     {
         $this->messages[] = compact('number', 'text');
-        return true;
     }
 
     public function getMessages(): array
