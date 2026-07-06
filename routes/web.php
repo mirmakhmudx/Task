@@ -77,7 +77,6 @@ Route::middleware(['auth', 'verified'])->group(function () {
             Route::delete('/{advert}/photos/{photo}', [ManageController::class, 'destroyPhoto'])->name('photos.destroy');
             Route::post('/{advert}/moderation', [ManageController::class, 'sendToModeration'])->name('send-to-moderation');
             Route::delete('/{advert}', [ManageController::class, 'destroy'])->name('destroy');
-            Route::get('/adverts', [\App\Http\Controllers\Admin\Adverts\ManageController::class, 'index'])->name('index');
 
             // Show (owner) — ENG OXIRIDA
             Route::get('/{advert}', [AdvertController::class, 'show'])->name('show');
