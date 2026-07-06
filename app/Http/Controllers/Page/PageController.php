@@ -14,10 +14,13 @@ class PageController extends Controller
         $slugs = explode('/', $path);
         $slug  = end($slugs);
 
-        // oxirgi slug bo'yicha nomzodlarni olamiz, to'liq yo'li mos kelganini tanlaymiz
         foreach (Page::where('slug', $slug)->get() as $page) {
             if ($page->getPath() === $path) {
-                return view('pages.show', compact('page'));
+                $custom = 'pages.' . $page->slug;
+
+                return view()->exists($custom)
+                    ? view($custom, compact('page'))
+                    : view('pages.show', compact('page'));
             }
         }
 
