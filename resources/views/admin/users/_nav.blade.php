@@ -5,6 +5,18 @@
                href="{{ route('admin.home') }}">Dashboard</a>
         </li>
         <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.adverts.*') && !request()->routeIs('admin.adverts.categories.*') ? 'active' : '' }}"
+               href="{{ route('admin.adverts.index') }}">Adverts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.banners.*') ? 'active' : '' }}"
+               href="{{ route('admin.banners.index') }}">Banners</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link {{ request()->routeIs('admin.adverts.categories.*') ? 'active' : '' }}"
+               href="{{ route('admin.adverts.categories.index') }}">Categories</a>
+        </li>
+        <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('admin.regions.*') ? 'active' : '' }}"
                href="{{ route('admin.regions.index') }}">Regions</a>
         </li>
@@ -21,7 +33,6 @@
                href="{{ route('admin.tickets.index') }}">Tickets</a>
         </li>
     </ul>
-
     @if(request()->routeIs('admin.users.*') && !request()->routeIs('admin.users.create'))
         <a href="{{ route('admin.users.create') }}" class="btn btn-primary btn-sm">+ Create</a>
     @endif
