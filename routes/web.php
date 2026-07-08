@@ -165,6 +165,15 @@ Route::middleware(['auth', 'verified'])->group(function () {
         Route::post('tickets/{ticket}/messages', [AdminTicketController::class, 'message'])->name('tickets.message');
         Route::delete('tickets/{ticket}', [AdminTicketController::class, 'destroy'])->name('tickets.destroy');
 
+        Route::prefix('banners')->name('banners.')->group(function () {
+            Route::get('/', [\App\Http\Controllers\Admin\Banners\BannerController::class, 'index'])->name('index');
+            Route::get('/{banner}', [\App\Http\Controllers\Admin\Banners\BannerController::class, 'show'])->name('show');
+            Route::post('/{banner}/moderate', [\App\Http\Controllers\Admin\Banners\BannerController::class, 'moderate'])->name('moderate');
+            Route::get('/{banner}/reject', [\App\Http\Controllers\Admin\Banners\BannerController::class, 'rejectForm'])->name('reject.form');
+            Route::post('/{banner}/reject', [\App\Http\Controllers\Admin\Banners\BannerController::class, 'reject'])->name('reject');
+            Route::post('/{banner}/pay', [\App\Http\Controllers\Admin\Banners\BannerController::class, 'pay'])->name('pay');
+            Route::delete('/{banner}', [\App\Http\Controllers\Admin\Banners\BannerController::class, 'destroy'])->name('destroy');
+        });
         Route::prefix('adverts')->name('adverts.')->group(function () {
 
             Route::resource('categories', Adverts\CategoryController::class)->names('categories');
@@ -177,6 +186,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
                 Route::delete('/attributes/{attribute}', [Adverts\AttributeController::class, 'destroy'])->name('attributes.destroy');
             });
 
+            Route::get('/', [Adverts\ManageController::class, 'index'])->name('index');
             Route::get('/{advert}', [Adverts\ManageController::class, 'show'])->name('show');
             Route::post('/{advert}/moderate', [Adverts\ManageController::class, 'moderate'])->name('moderate');
             Route::post('/{advert}/reject', [Adverts\ManageController::class, 'reject'])->name('reject');
