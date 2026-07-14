@@ -67,7 +67,6 @@ class AdvertController extends Controller
             $cat->adverts_count = $categoryCounts[$cat->id] ?? 0;
         });
 
-        // ── Autocomplete AJAX ────────────────────────────────────────────────
         if ($request->ajax() || $request->has('autocomplete')) {
             return $this->autocompleteResponse($adverts, $request);
         }
