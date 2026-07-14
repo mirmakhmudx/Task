@@ -18,13 +18,13 @@ class User extends Authenticatable
 {
     use HasApiTokens, HasFactory, Notifiable;
 
-    public const STATUS_WAIT   = 'waiting';
+    public const STATUS_WAIT = 'waiting';
     public const STATUS_ACTIVE = 'active';
 
-    public const ROLE_USER      = 'user';
+    public const ROLE_USER = 'user';
     public const ROLE_MODERATOR = 'moderator';
-    public const ROLE_MANAGER   = 'manager';
-    public const ROLE_ADMIN     = 'admin';
+    public const ROLE_MANAGER = 'manager';
+    public const ROLE_ADMIN = 'admin';
 
     protected $fillable = [
         'name', 'last_name', 'email', 'password',
@@ -38,11 +38,11 @@ class User extends Authenticatable
     protected function casts(): array
     {
         return [
-            'email_verified_at'         => 'datetime',
+            'email_verified_at' => 'datetime',
             'phone_verify_token_expire' => 'datetime',
-            'password'                  => 'hashed',
-            'phone_verified'            => 'boolean',
-            'two_factor_auth'           => 'boolean',
+            'password' => 'hashed',
+            'phone_verified' => 'boolean',
+            'two_factor_auth' => 'boolean',
         ];
     }
 
@@ -51,11 +51,11 @@ class User extends Authenticatable
     public static function register(string $name, string $email, string $password): self
     {
         return static::create([
-            'name'         => $name,
-            'email'        => $email,
-            'password'     => Hash::make($password),
-            'status'       => self::STATUS_WAIT,
-            'role'         => self::ROLE_USER,
+            'name' => $name,
+            'email' => $email,
+            'password' => Hash::make($password),
+            'status' => self::STATUS_WAIT,
+            'role' => self::ROLE_USER,
             'verify_token' => \Illuminate\Support\Str::uuid(),
         ]);
     }
@@ -63,10 +63,10 @@ class User extends Authenticatable
     public static function new(string $name, string $email): self
     {
         return static::create([
-            'name'     => $name,
-            'email'    => $email,
-            'role'     => self::ROLE_USER,
-            'status'   => self::STATUS_ACTIVE,
+            'name' => $name,
+            'email' => $email,
+            'role' => self::ROLE_USER,
+            'status' => self::STATUS_ACTIVE,
             'password' => Hash::make(Str::random(12)),
         ]);
     }
@@ -79,15 +79,22 @@ class User extends Authenticatable
             throw new DomainException('Foydalanuvchi allaqachon tasdiqlangan.');
         }
         $this->update([
-            'status'       => self::STATUS_ACTIVE,
+            'status' => self::STATUS_ACTIVE,
             'verify_token' => null,
         ]);
     }
 
     // ===== Status =====
 
-    public function isWait(): bool   { return $this->status === self::STATUS_WAIT; }
-    public function isActive(): bool { return $this->status === self::STATUS_ACTIVE; }
+    public function isWait(): bool
+    {
+        return $this->status === self::STATUS_WAIT;
+    }
+
+    public function isActive(): bool
+    {
+        return $this->status === self::STATUS_ACTIVE;
+    }
 
     public function activate(): void
     {
@@ -96,6 +103,7 @@ class User extends Authenticatable
         }
         $this->update(['status' => self::STATUS_ACTIVE]);
     }
+
     protected static function newFactory()
     {
         return \Database\Factories\User\UserFactory::new();
@@ -107,10 +115,10 @@ class User extends Authenticatable
     public static function rolesList(): array
     {
         return [
-            self::ROLE_USER      => 'User',
+            self::ROLE_USER => 'User',
             self::ROLE_MODERATOR => 'Moderator',
-            self::ROLE_MANAGER   => 'Manager',
-            self::ROLE_ADMIN     => 'Admin',
+            self::ROLE_MANAGER => 'Manager',
+            self::ROLE_ADMIN => 'Admin',
         ];
     }
 
@@ -125,10 +133,25 @@ class User extends Authenticatable
         $this->update(['role' => $role]);
     }
 
-    public function isAdmin(): bool     { return $this->role === self::ROLE_ADMIN; }
-    public function isModerator(): bool { return $this->role === self::ROLE_MODERATOR; }
-    public function isManager(): bool   { return $this->role === self::ROLE_MANAGER; }
-    public function isUser(): bool      { return $this->role === self::ROLE_USER; }
+    public function isAdmin(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function isModerator(): bool
+    {
+        return $this->role === self::ROLE_MODERATOR;
+    }
+
+    public function isManager(): bool
+    {
+        return $this->role === self::ROLE_MANAGER;
+    }
+
+    public function isUser(): bool
+    {
+        return $this->role === self::ROLE_USER;
+    }
 
     public function canAccessAdminPanel(): bool
     {
@@ -154,8 +177,8 @@ class User extends Authenticatable
 
     public function unverifyPhone(): void
     {
-        $this->phone_verified            = false;
-        $this->phone_verify_token        = null;
+        $this->phone_verified = false;
+        $this->phone_verify_token = null;
         $this->phone_verify_token_expire = null;
     }
 
@@ -178,8 +201,8 @@ class User extends Authenticatable
             throw new DomainException('Token is already requested.');
         }
 
-        $this->phone_verified            = false;
-        $this->phone_verify_token        = (string) random_int(10000, 99999);
+        $this->phone_verified = false;
+        $this->phone_verify_token = (string)random_int(10000, 99999);
         $this->phone_verify_token_expire = $now->copy()->addSeconds(300);
 
         return $this->phone_verify_token;
@@ -200,8 +223,8 @@ class User extends Authenticatable
             throw new DomainException('Token is expired.');
         }
 
-        $this->phone_verified            = true;
-        $this->phone_verify_token        = null;
+        $this->phone_verified = true;
+        $this->phone_verify_token = null;
         $this->phone_verify_token_expire = null;
     }
 
