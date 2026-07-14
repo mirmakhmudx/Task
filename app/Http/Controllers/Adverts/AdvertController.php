@@ -37,7 +37,6 @@ class AdvertController extends Controller
             ? [$region->id]
             : Region::roots()->pluck('id')->toArray();
 
-        // Har bir region uchun aktiv e'lonlar soni
         $regionCounts = Advert::active()
             ->select('region_id', DB::raw('count(*) as adverts_count'))
             ->whereIn('region_id', $this->getAllRegionIds($region))
