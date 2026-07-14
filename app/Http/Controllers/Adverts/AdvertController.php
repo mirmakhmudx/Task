@@ -57,7 +57,6 @@ class AdvertController extends Controller
             ? $category->children()->orderBy('name')->get()
             : Category::roots()->orderBy('name')->get();
 
-        // Har kategoriya uchun aktiv e'lonlar soni
         $categoryCounts = Advert::active()
             ->select('category_id', DB::raw('count(*) as adverts_count'))
             ->groupBy('category_id')
