@@ -14,7 +14,6 @@ use Illuminate\View\View;
 
 class PageController extends Controller
 {
-    /** Summernote HTML'ini tozalash, lekin rasm o'lchami (width/height) saqlanadi */
     private function cleanContent(?string $html): string
     {
         return clean($html, [
