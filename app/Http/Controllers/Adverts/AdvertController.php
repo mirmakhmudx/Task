@@ -49,12 +49,10 @@ class AdvertController extends Controller
             ? $region->children()->orderBy('name')->get()
             : Region::roots()->orderBy('name')->get();
 
-        // Har region obyektiga count qo'shamiz
         $regions->each(function ($r) use ($regionCounts) {
             $r->adverts_count = $regionCounts[$r->id] ?? 0;
         });
 
-        // ── Sub-kategoriyalar + soni ─────────────────────────────────────────
         $categoryList = $category
             ? $category->children()->orderBy('name')->get()
             : Category::roots()->orderBy('name')->get();
