@@ -16,7 +16,6 @@ class ManageController extends Controller
         private readonly AdvertService $service
     ) {}
 
-    // Barcha e'lonlar ro'yxati (filter bilan)
     public function index(Request $request): View
     {
         Gate::authorize('admin-panel');
