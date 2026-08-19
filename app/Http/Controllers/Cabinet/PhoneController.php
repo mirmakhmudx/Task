@@ -15,7 +15,6 @@ class PhoneController extends Controller
     public function __construct(
         private readonly SmsSender $sms
     ) {}
-
     public function request(): RedirectResponse
     {
         $user = Auth::user();
