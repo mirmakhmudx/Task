@@ -25,6 +25,7 @@ class RegionController extends Controller
         return view('admin.regions.index', compact('regions'));
     }
 
+
     public function create(): View
     {
         Gate::authorize('admin-panel');
