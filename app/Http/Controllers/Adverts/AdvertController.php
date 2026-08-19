@@ -21,7 +21,6 @@ class AdvertController extends Controller
     {
         $this->search = $search;
     }
-
     public function index(SearchRequest $request, AdvertsPath $path)
     {
         $category = $path->category;
@@ -74,7 +73,6 @@ class AdvertController extends Controller
             'category', 'region', 'categoryList', 'regions', 'adverts', 'path'
         ));
     }
-
     private function getAllRegionIds(?Region $region): array
     {
         if (!$region) {
@@ -86,7 +84,6 @@ class AdvertController extends Controller
         }
         return $ids;
     }
-
     private function autocompleteResponse($adverts, SearchRequest $request): JsonResponse
     {
         $items = [];
