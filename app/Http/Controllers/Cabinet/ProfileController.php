@@ -15,12 +15,10 @@ class ProfileController extends Controller
     {
         return view('cabinet.profile.show', ['user' => Auth::user()]);
     }
-
     public function edit(): View
     {
         return view('cabinet.profile.edit', ['user' => Auth::user()]);
     }
-
     public function update(Request $request): RedirectResponse
     {
         $request->validate([
