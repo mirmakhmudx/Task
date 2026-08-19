@@ -43,7 +43,6 @@ class CategoryController extends Controller
         return redirect()->route('admin.adverts.categories.show', $category)
             ->with('success', 'Kategoriya yaratildi.');
     }
-
     public function show(Category $category): View
     {
         Gate::authorize('admin-panel');
