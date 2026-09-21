@@ -63,6 +63,7 @@ class HomeController extends Controller
         return view('admin.home.home', compact('stats', 'moderationAdverts', 'openTickets'));
     }
 
+
     public function index()
     {
         return view('home');
