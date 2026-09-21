@@ -94,6 +94,7 @@ class TicketController extends Controller
         return redirect()->route('admin.tickets.show', $ticket);
     }
 
+
     public function message(MessageRequest $request, Ticket $ticket): RedirectResponse
     {
         Gate::authorize('admin-panel');
