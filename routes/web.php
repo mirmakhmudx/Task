@@ -195,6 +195,7 @@ Route::middleware(['auth', 'verified'])->group(function () {
         });
     });
 });
+
 Route::get('/adverts/{adverts_path?}', [\App\Http\Controllers\Adverts\AdvertController::class, 'index'])
     ->where('adverts_path', '.*')
     ->name('adverts.index');
