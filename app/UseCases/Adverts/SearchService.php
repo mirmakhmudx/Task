@@ -21,12 +21,10 @@ class SearchService
 
     public function search(?Category $category, ?Region $region, SearchRequest $request, int $perPage, int $page): LengthAwarePaginator
     {
-        // 1. So'rovdan kelayotgan va ichi bo'sh bo'lmagan atributlarni filtrlab olamiz
         $values = array_filter((array)$request->input('attrs'), function ($value) {
             return !empty($value['equals']) || !empty($value['from']) || !empty($value['to']);
         });
 
-        // 2. Elasticsearch-ga yuboriladigan so'rov
         $response = $this->client->search([
             'index' => 'app',
             'body' => [
@@ -75,7 +73,6 @@ class SearchService
             ],
         ]);
 
-        // 3. Elastic v8 — asResponse() ishlatmasak array kabi ishlaydi
         $hits = $response['hits']['hits'] ?? [];
         $ids  = array_column($hits, '_id');
 
@@ -83,7 +80,6 @@ class SearchService
             return new LengthAwarePaginator([], 0, $perPage, $page);
         }
 
-        // 4. ID-lar bo'yicha bazadan e'lonlarni yuklaymiz
         $items = Advert::active()
             ->with(['category', 'region', 'photos'])
             ->whereIn('id', $ids)
