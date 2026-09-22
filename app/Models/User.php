@@ -228,8 +228,6 @@ class User extends Authenticatable
         $this->phone_verify_token_expire = null;
     }
 
-    // ===== Favorites =====
-
     public function favorites(): BelongsToMany
     {
         return $this->belongsToMany(Advert::class, 'advert_user_favorites');
