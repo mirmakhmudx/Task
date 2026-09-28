@@ -7,6 +7,7 @@
                 E'lonni rad etish: {{ $advert->title }}
             </h5>
 
+
             @if($errors->any())
                 <div style="background:#fff5f5;border:1px solid #fecaca;border-radius:10px;padding:10px 16px;margin-bottom:16px;">
                     @foreach($errors->all() as $error)
