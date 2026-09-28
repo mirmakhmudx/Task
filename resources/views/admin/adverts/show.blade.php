@@ -41,7 +41,6 @@
         </div>
     @endif
 
-    {{-- ADMIN AMALLAR --}}
     <div class="d-flex flex-wrap gap-2 mb-4">
         @if($advert->isModeration())
             <form method="POST" action="{{ route('admin.adverts.moderate', $advert) }}" style="display:inline;">
