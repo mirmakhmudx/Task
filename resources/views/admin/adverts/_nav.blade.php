@@ -4,7 +4,6 @@
             <a class="nav-link {{ request()->routeIs('admin.home') ? 'active' : '' }}"
                href="{{ route('admin.home') }}">Dashboard</a>
         </li>
-
         <li class="nav-item">
             <a class="nav-link {{ request()->routeIs('admin.adverts.*') && !request()->routeIs('admin.adverts.categories.*') ? 'active' : '' }}"
                href="{{ route('admin.adverts.index') }}">Adverts</a>
