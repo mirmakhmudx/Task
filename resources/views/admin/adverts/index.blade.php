@@ -6,8 +6,6 @@
     @if(session('success'))
         <div class="alert alert-success" style="border-radius:10px;">{{ session('success') }}</div>
     @endif
-
-    {{-- Filter --}}
     <div class="card mb-4">
         <div class="card-body">
             <h6 class="fw-bold mb-3" style="color:#6b7280;">Filter</h6>
