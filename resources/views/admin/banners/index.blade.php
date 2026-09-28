@@ -69,6 +69,7 @@
                                 <span style="background:{{ $bg }};color:{{ $fg }};padding:3px 10px;border-radius:6px;font-size:0.78rem;font-weight:600;">{{ $lbl }}</span>
                             </td>
                         </tr>
+
                     @empty
                         <tr><td colspan="6" class="text-center py-4 text-muted">Banner yo'q</td></tr>
                     @endforelse
