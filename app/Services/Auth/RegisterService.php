@@ -17,7 +17,6 @@ class RegisterService
         private Dispatcher $dispatcher
     ) {}
 
-
     public function handle(array $data)
     {
         $user = User::create([
