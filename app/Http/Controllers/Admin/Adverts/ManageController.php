@@ -18,6 +18,7 @@ class ManageController extends Controller
 
     public function index(Request $request): View
     {
+
         Gate::authorize('admin-panel');
 
         $query = Advert::with(['user', 'region', 'category'])->orderByDesc('id');
