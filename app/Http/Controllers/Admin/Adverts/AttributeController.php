@@ -22,7 +22,6 @@ class AttributeController extends Controller
         $types = Attribute::typesList();
         return view('admin.adverts.categories.attributes.create', compact('category', 'types'));
     }
-
     public function store(AttributeStoreRequest $request, Category $category): RedirectResponse
     {
         Gate::authorize('admin-panel');
